@@ -9,9 +9,7 @@
 - PyOpenGL
 - GameObjects
 
-# Setup
-
-## Ubuntu Linux
+## Ubuntu Linux Setup
 
 (Tested on Ubuntu 10.04 and 10.10)
 
@@ -20,7 +18,7 @@
      sudo apt-get install python-setuptools
      sudo easy_install gameobjects
      
-## Mac OS X 
+## Mac OS X Setup
 
 (Tested on Mac OS X 10.10 Yosemite)
 
@@ -31,7 +29,11 @@ You need to have [Homebrew](http://brew.sh) and [Python 2.7](http://docs.python-
     pip install pyopengl
     easy_install gameobjects
 
-## Screenshots
+# Running
+
+Execute script 'run.sh' at the top level folder.
+
+# Screenshots
 
 ![Screenshot 01](screenshots/01.png)
 ![Screenshot 02](screenshots/02.png)
