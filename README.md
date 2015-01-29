@@ -9,7 +9,6 @@ I've recorded a video of this game running. You can watch it [here](https://vime
 - Ubuntu or Mac OS X
 - PyGame
 - PyOpenGL
-- GameObjects
 - PyTest (to run automated unit tests)
 
 ## Ubuntu Linux Setup
@@ -18,8 +17,6 @@ I've recorded a video of this game running. You can watch it [here](https://vime
 
      sudo apt-get install python-opengl
      sudo apt-get install python-pygame
-     sudo apt-get install python-setuptools
-     sudo easy_install gameobjects
      
 ## Mac OS X Setup
 
@@ -30,19 +27,18 @@ You need to have [Homebrew](http://brew.sh) and [Python 2.7](http://docs.python-
     brew install Caskroom/cask/xquartz
     brew install pygame
     pip install pyopengl
-    easy_install gameobjects
      
 # Running the Game
 
-Enter the 'breakout' directory and execute script 'run.sh'.
+Enter the 'source' directory and execute script 'run.sh'.
 
-# Running Unit Tests
+# Running Automated Unit Tests
 
 Make sure you have pytest installed:
 
     pip install pytest
 
-Then execute inside the 'breakout' folder:
+Then execute inside the 'source' folder:
 
     py.test
 
