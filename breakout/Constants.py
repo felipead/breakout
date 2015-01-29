@@ -64,22 +64,22 @@ MOUSE_BUTTON_SCROLLDOWN = 5
 
 # Media file names
 
-FILE_SOUND_COLLISION_BALL_WALL = 'resources/sounds/Pop.wav'
-FILE_SOUND_COLLISION_BALL_BALL = 'resources/sounds/Bottle.wav'
-FILE_SOUND_COLLISION_BALL_BLOCK = 'resources/sounds/Tuntz.wav'
-FILE_SOUND_COLLISION_BALL_PADDLE = 'resources/sounds/Ping.wav'
-FILE_SOUND_BALL_DESTROYED = 'resources/sounds/Basso.wav'
+FILE_SOUND_COLLISION_BALL_WALL = 'breakout/resources/sounds/Pop.wav'
+FILE_SOUND_COLLISION_BALL_BALL = 'breakout/resources/sounds/Bottle.wav'
+FILE_SOUND_COLLISION_BALL_BLOCK = 'breakout/resources/sounds/Tuntz.wav'
+FILE_SOUND_COLLISION_BALL_PADDLE = 'breakout/resources/sounds/Ping.wav'
+FILE_SOUND_BALL_DESTROYED = 'breakout/resources/sounds/Basso.wav'
 
-FILE_BACKGROUND_LEVEL1 = 'resources/graphics/Stage1.png'
+FILE_BACKGROUND_LEVEL1 = 'breakout/resources/graphics/Stage1.png'
 
-FILE_MUSIC_LEVEL1 = 'resources/sounds/ChemicalBurn.wav'
+FILE_MUSIC_LEVEL1 = 'breakout/resources/sounds/ChemicalBurn.wav'
 
 #===================================================================================================
 
 # Fonts
 
-FILE_FONT_INFOBAR = 'resources/fonts/pf_tempesta_five_extended.ttf'
-FILE_FONT_MESSAGE = 'resources/fonts/pf_tempesta_five_extended.ttf'
+FILE_FONT_INFOBAR = 'breakout/resources/fonts/pf_tempesta_five_extended.ttf'
+FILE_FONT_MESSAGE = 'breakout/resources/fonts/pf_tempesta_five_extended.ttf'
 
 FONT_INFOBAR_SIZE = 14
 FONT_INFOBAR_COLOR_FOREGROUND = (255, 255, 255)
