@@ -1,20 +1,17 @@
 #!/usr/bin/env python
 # encoding: utf-8
-"""
-Copyright (c) 2010 Felipe Augusto Dornelas. All rights reserved.
-"""
+
 
 from OpenGL.GL import *
 from OpenGL.GLU import *
-from OpenGL.GLUT import *
 
 import pygame
 from pygame.locals import *
 
 from Game import Game
-from Geometry import Rectangle
-from DrawingUtil import *
-from Constants import *
+from geometry.Rectangle import Rectangle
+from util.Drawing import *
+from Settings import *
 
 #===================================================================================================
 
@@ -122,31 +119,6 @@ def run():
         game.display(milliseconds, tick)
 
         pygame.display.flip() # swap buffers
-
-
-# Runs the game using GLUT instead of PyGame. PyGame is more powerful and flexible, therefore,
-# prefered.
-# def run():
-#     glutInit()
-#     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB)
-#     glutInitWindowSize(*screenSize)
-#     glutCreateWindow("Breakout")
-#
-#     glutReshapeFunc(reshape)
-#     glutMouseFunc(mouseEvent)
-#     glutKeyboardFunc(keyboardEvent)
-#     glutPassiveMotionFunc(moveEvent)
-#     glutMotionFunc(moveEvent)
-#     glutIdleFunc(game.tick)
-#
-#     # For some reason, the display function is not called properly,
-#     # so I'm displaying all objects on the IdleFunc.
-#     #glutDisplayFunc(game.display)
-#
-#     init()
-#
-#     glutMainLoop()
-#
 
 #===================================================================================================
 

@@ -1,9 +1,5 @@
 # encoding: utf-8
-"""
-Copyright (c) 2010 Felipe Augusto Dornelas. All rights reserved.
-"""
 
-#===================================================================================================
 
 # Screen and canvas dimensions constants
 
@@ -29,24 +25,6 @@ VELOCITYBAR_HEIGHT = 3.0
 INFOBAR_HEIGHT = 12.0
 
 PADDLE_SPEED_MAX = 0.75
-PADDLE_HEIGHT = 5.0
-
-BLOCK_COLOR_RED = 1
-BLOCK_COLOR_BLUE = 2
-BLOCK_COLOR_GREEN = 3
-
-BLOCK_POINTS_BLUE = 10
-BLOCK_POINTS_GREEN = 20
-BLOCK_POINTS_RED = 30
-
-#===================================================================================================
-
-# Collision constants
-
-COLLISION_BALL_WALL = 1
-COLLISION_BALL_BALL = 2
-COLLISION_BALL_BLOCK = 4
-COLLISION_BALL_PADDLE = 8
 
 #===================================================================================================
 
@@ -63,12 +41,6 @@ MOUSE_BUTTON_SCROLLDOWN = 5
 #===================================================================================================
 
 # Media file names
-
-FILE_SOUND_COLLISION_BALL_WALL = 'breakout/resources/sounds/Pop.wav'
-FILE_SOUND_COLLISION_BALL_BALL = 'breakout/resources/sounds/Bottle.wav'
-FILE_SOUND_COLLISION_BALL_BLOCK = 'breakout/resources/sounds/Tuntz.wav'
-FILE_SOUND_COLLISION_BALL_PADDLE = 'breakout/resources/sounds/Ping.wav'
-FILE_SOUND_BALL_DESTROYED = 'breakout/resources/sounds/Basso.wav'
 
 FILE_BACKGROUND_LEVEL1 = 'breakout/resources/graphics/Level1.png'
 

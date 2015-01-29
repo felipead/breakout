@@ -4,6 +4,7 @@ Copyright (c) 2010 Felipe Augusto Dornelas. All rights reserved.
 """
 
 from OpenGL.GL import *
+from OpenGL.GLU import *
 
 import pygame
 

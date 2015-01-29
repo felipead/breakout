@@ -1,7 +1,4 @@
 # encoding: utf-8
-"""
-Copyright (c) 2010 Felipe Augusto Dornelas. All rights reserved.
-"""
 
 from OpenGL.GL import *
 from OpenGL.GLU import *
@@ -14,20 +11,25 @@ from pygame.locals import *
 
 from datetime import datetime
 
-from Geometry import Vector, Rectangle
-from GameObjects import *
-from DrawingUtil import *
-from Constants import *
+from geometry.Vector import *
+from geometry.Rectangle import *
 
-#===================================================================================================
+from domain.Ball import *
+from domain.Block import *
+from domain.Paddle import *
 
-# Game State Constants
+from util.Drawing import *
+
+from Settings import *
+
+
 GAME_STATE_PLAY = 1
 GAME_STATE_PAUSE = 2
 GAME_STATE_HALT = 3
 GAME_STATE_HALT_RUNCYCLE = 4
 GAME_STATE_LOST = 5
 GAME_STATE_WON = 6
+
 
 class Game:
 
@@ -309,6 +311,6 @@ class Game:
             
         s = BALL_SPEED_DEFAULT
         
-        self.balls.append(Ball(self, position=Vector((self._boundaries.width/2, self._boundaries.top - BALL_RADIUS)), speed=Vector((-s, s))))
-        self.balls.append(Ball(self, position=Vector((self._boundaries.right - BALL_RADIUS, self._boundaries.top - BALL_RADIUS)), speed=Vector((-s, -s))))
-        self.balls.append(Ball(self, position=Vector((self._boundaries.left + BALL_RADIUS, self._boundaries.top - BALL_RADIUS)), speed=Vector((s, -s))))
+        self.balls.append(Ball(self, position=Vector((self._boundaries.width/2, self._boundaries.top - BALL_RADIUS)), speed=Vector((-s, s)), radius=BALL_RADIUS))
+        self.balls.append(Ball(self, position=Vector((self._boundaries.right - BALL_RADIUS, self._boundaries.top - BALL_RADIUS)), speed=Vector((-s, -s)), radius=BALL_RADIUS))
+        self.balls.append(Ball(self, position=Vector((self._boundaries.left + BALL_RADIUS, self._boundaries.top - BALL_RADIUS)), speed=Vector((s, -s)), radius=BALL_RADIUS))
