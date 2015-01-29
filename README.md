@@ -1,6 +1,8 @@
 # Breakout
 [Breakout](http://en.wikipedia.org/wiki/Breakout_%28video_game%29) game engine implemented in Python, [PyGame](http://pygame.org/) and OpenGL.
 
+I've recorded a video of this game running. You can watch it [here](https://vimeo.com/118087355).
+
 # Requirements
 
 - Python 2.7 or above (does not support Python 3.x)
@@ -8,6 +10,7 @@
 - PyGame
 - PyOpenGL
 - GameObjects
+- PyTest (to run automated unit tests)
 
 ## Ubuntu Linux Setup
 
@@ -28,10 +31,20 @@ You need to have [Homebrew](http://brew.sh) and [Python 2.7](http://docs.python-
     brew install pygame
     pip install pyopengl
     easy_install gameobjects
-
-# Running
+     
+# Running the Game
 
 Execute script 'run.sh' at the top level folder.
+
+# Running Unit Tests
+
+Make sure you have pytest installed:
+
+    pip install pytest
+
+Then execute inside the repository root:
+
+    py.test
 
 # Screenshots
 
