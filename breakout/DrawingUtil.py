@@ -4,43 +4,8 @@ Copyright (c) 2010 Felipe Augusto Dornelas. All rights reserved.
 """
 
 from OpenGL.GL import *
-from OpenGL.GLU import *
-from OpenGL.GLUT import *
 
 import pygame
-
-#===================================================================================================
-
-# These funcions are meant to be used only with GLUT. We are using PyGame instead, which make them
-# unnecessary.
-
-# def drawTextStroke(x, y, text, font=GLUT_STROKE_MONO_ROMAN,
-#     scale=0.05, lineWidth=2.0, antialiasing=True):
-# 
-#     if antialiasing:
-#         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
-#         glEnable(GL_BLEND)
-#         glEnable(GL_LINE_SMOOTH)
-#         glLineWidth(lineWidth)
-# 
-#     glPushMatrix()
-#     glTranslatef(x, y, 0)
-#     glScalef(scale, scale, scale)
-#     for c in text:
-#         glutStrokeCharacter(GLUT_STROKE_MONO_ROMAN, ord(c))
-#     glPopMatrix()
-
-
-# def drawTextBitmap(x, y, text, font):
-#     """
-#     Known bitmap fonts:
-#         GLUT_BITMAP_TIMES_ROMAN_24
-#         GLUT_BITMAP_9_BY_15
-#         GLUT_BITTMAP_HELVETICA_18
-#     """
-#     glRasterPos2f(x, y)
-#     for c in text:
-#         glutBitmapCharacter(font, c)
 
 
 #===================================================================================================

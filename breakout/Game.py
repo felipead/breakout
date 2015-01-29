@@ -16,7 +16,7 @@ from datetime import datetime
 
 from Geometry import Vector, Rectangle
 from GameObjects import *
-from Drawing import *
+from DrawingUtil import *
 from Constants import *
 
 #===================================================================================================

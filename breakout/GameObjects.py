@@ -13,7 +13,7 @@ from OpenGL.GLU import *
 
 from Geometry import *
 from Constants import *
-from Drawing import *
+from DrawingUtil import *
 
 #===================================================================================================
 

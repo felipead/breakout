@@ -13,7 +13,7 @@ from pygame.locals import *
 
 from Game import Game
 from Geometry import Rectangle
-from Drawing import *
+from DrawingUtil import *
 from Constants import *
 
 #===================================================================================================
