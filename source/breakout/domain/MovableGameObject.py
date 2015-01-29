@@ -1,4 +1,5 @@
-from GameObject import GameObject 
+from main.domain import GameObject
+
 
 class MovableGameObject(GameObject):
 

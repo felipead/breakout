@@ -34,7 +34,7 @@ You need to have [Homebrew](http://brew.sh) and [Python 2.7](http://docs.python-
      
 # Running the Game
 
-Execute script 'run.sh' at the top level folder.
+Enter the 'breakout' directory and execute script 'run.sh'.
 
 # Running Unit Tests
 
@@ -42,7 +42,7 @@ Make sure you have pytest installed:
 
     pip install pytest
 
-Then execute inside the repository root:
+Then execute inside the 'breakout' folder:
 
     py.test
 

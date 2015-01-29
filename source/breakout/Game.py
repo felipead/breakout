@@ -1,26 +1,16 @@
 # encoding: utf-8
 
-from OpenGL.GL import *
-from OpenGL.GLU import *
-from OpenGL.GLUT import *
-
-import pygame
-from pygame.mixer import Sound
-from pygame.font import Font
-from pygame.locals import *
-
 from datetime import datetime
 
-from geometry.Vector import *
-from geometry.Rectangle import *
+from OpenGL.GLUT import *
+from pygame.font import Font
+from pygame.locals import *
 
 from domain.Ball import *
 from domain.Block import *
 from domain.Paddle import *
-
 from util.Drawing import *
-
-from Settings import *
+from main.Settings import *
 
 
 GAME_STATE_PLAY = 1

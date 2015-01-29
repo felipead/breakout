@@ -1,10 +1,8 @@
-from MovableGameObject import *
+from OpenGL.GL import *
 
+from main.domain.MovableGameObject import *
 from ..geometry.Rectangle import *
 from ..geometry.Vector import *
-
-from OpenGL.GL import *
-from OpenGL.GLU import *
 
 PADDLE_HEIGHT = 5.0
 

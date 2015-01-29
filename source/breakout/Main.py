@@ -2,16 +2,13 @@
 # encoding: utf-8
 
 
-from OpenGL.GL import *
-from OpenGL.GLU import *
-
-import pygame
 from pygame.locals import *
 
-from Game import Game
-from geometry.Rectangle import Rectangle
+from main import Game
+from main.geometry.Rectangle import Rectangle
 from util.Drawing import *
 from Settings import *
+
 
 #===================================================================================================
 

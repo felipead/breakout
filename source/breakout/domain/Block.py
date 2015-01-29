@@ -1,10 +1,9 @@
 # encoding: utf-8
 
-from MovableGameObject import *
-from ..geometry.Rectangle import *
-
 from OpenGL.GL import *
-from OpenGL.GLU import *
+
+from main.domain.MovableGameObject import *
+from ..geometry.Rectangle import *
 
 
 BLOCK_COLOR_RED = 1
