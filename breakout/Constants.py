@@ -70,7 +70,7 @@ FILE_SOUND_COLLISION_BALL_BLOCK = 'breakout/resources/sounds/Tuntz.wav'
 FILE_SOUND_COLLISION_BALL_PADDLE = 'breakout/resources/sounds/Ping.wav'
 FILE_SOUND_BALL_DESTROYED = 'breakout/resources/sounds/Basso.wav'
 
-FILE_BACKGROUND_LEVEL1 = 'breakout/resources/graphics/Stage1.png'
+FILE_BACKGROUND_LEVEL1 = 'breakout/resources/graphics/Level1.png'
 
 FILE_MUSIC_LEVEL1 = 'breakout/resources/sounds/ChemicalBurn.wav'
 
