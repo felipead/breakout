@@ -1,4 +1,4 @@
-from main.domain import GameObject
+from breakout.domain.GameObject import GameObject
 
 
 class MovableGameObject(GameObject):

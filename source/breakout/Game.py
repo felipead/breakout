@@ -10,7 +10,7 @@ from domain.Ball import *
 from domain.Block import *
 from domain.Paddle import *
 from util.Drawing import *
-from main.Settings import *
+from breakout.Settings import *
 
 
 GAME_STATE_PLAY = 1

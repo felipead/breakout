@@ -1,6 +1,6 @@
 from OpenGL.GL import *
 
-from main.domain.MovableGameObject import *
+from breakout.domain.MovableGameObject import *
 from ..geometry.Rectangle import *
 from ..geometry.Vector import *
 
@@ -53,7 +53,7 @@ class Paddle(MovableGameObject):
         h = self.height/2 - bv
         w = self.width/2 - bh
 
-        # outter rectangle
+        # outer rectangle
         glBegin(GL_POLYGON)
         glColor(1 - colorTone, 1 - colorTone, 1 - colorTone)
         glVertex(x - (w + bh), y + (h + bv))

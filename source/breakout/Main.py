@@ -4,8 +4,8 @@
 
 from pygame.locals import *
 
-from main import Game
-from main.geometry.Rectangle import Rectangle
+from breakout.Game import *
+from breakout.geometry.Rectangle import Rectangle
 from util.Drawing import *
 from Settings import *
 

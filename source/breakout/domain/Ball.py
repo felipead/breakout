@@ -5,16 +5,16 @@ import random
 from pygame.mixer import Sound
 from OpenGL.GL import *
 
-from main.domain.MovableGameObject import *
+from breakout.domain.MovableGameObject import *
 from ..geometry.Rectangle import *
 from ..util.Drawing import *
 
 
-FILE_SOUND_COLLISION_BALL_WALL = 'main/resources/sounds/Pop.wav'
-FILE_SOUND_COLLISION_BALL_BALL = 'main/resources/sounds/Bottle.wav'
-FILE_SOUND_COLLISION_BALL_BLOCK = 'main/resources/sounds/Tuntz.wav'
-FILE_SOUND_COLLISION_BALL_PADDLE = 'main/resources/sounds/Ping.wav'
-FILE_SOUND_BALL_DESTROYED = 'main/resources/sounds/Basso.wav'
+FILE_SOUND_COLLISION_BALL_WALL = 'breakout/resources/sounds/Pop.wav'
+FILE_SOUND_COLLISION_BALL_BALL = 'breakout/resources/sounds/Bottle.wav'
+FILE_SOUND_COLLISION_BALL_BLOCK = 'breakout/resources/sounds/Tuntz.wav'
+FILE_SOUND_COLLISION_BALL_PADDLE = 'breakout/resources/sounds/Ping.wav'
+FILE_SOUND_BALL_DESTROYED = 'breakout/resources/sounds/Basso.wav'
 
 COLLISION_BALL_WALL = 1
 COLLISION_BALL_BALL = 2
@@ -188,7 +188,7 @@ class Ball(MovableGameObject):
         x = self.position.x
         y = self.position.y
 
-        # outter circle
+        # outer circle
         glColor(1 - colorTone, 1 - colorTone, 1 - colorTone)
         drawCircle(x, y, self.radius)
 

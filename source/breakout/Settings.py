@@ -42,16 +42,16 @@ MOUSE_BUTTON_SCROLLDOWN = 5
 
 # Media file names
 
-FILE_BACKGROUND_LEVEL1 = 'main/resources/graphics/Level1.png'
+FILE_BACKGROUND_LEVEL1 = 'breakout/resources/graphics/Level1.png'
 
-FILE_MUSIC_LEVEL1 = 'main/resources/sounds/ChemicalBurn.wav'
+FILE_MUSIC_LEVEL1 = 'breakout/resources/sounds/ChemicalBurn.wav'
 
 #===================================================================================================
 
 # Fonts
 
-FILE_FONT_INFOBAR = 'main/resources/fonts/pf_tempesta_five_extended.ttf'
-FILE_FONT_MESSAGE = 'main/resources/fonts/pf_tempesta_five_extended.ttf'
+FILE_FONT_INFOBAR = 'breakout/resources/fonts/pf_tempesta_five_extended.ttf'
+FILE_FONT_MESSAGE = 'breakout/resources/fonts/pf_tempesta_five_extended.ttf'
 
 FONT_INFOBAR_SIZE = 14
 FONT_INFOBAR_COLOR_FOREGROUND = (255, 255, 255)

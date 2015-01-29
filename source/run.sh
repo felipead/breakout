@@ -1,1 +1,1 @@
-python -m main.Main
+python -m breakout.Main

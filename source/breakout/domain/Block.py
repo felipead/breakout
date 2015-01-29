@@ -2,7 +2,7 @@
 
 from OpenGL.GL import *
 
-from main.domain.MovableGameObject import *
+from breakout.domain.MovableGameObject import *
 from ..geometry.Rectangle import *
 
 
