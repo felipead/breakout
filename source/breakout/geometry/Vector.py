@@ -4,9 +4,7 @@ import math
 
 class Vector(list):
 
-    def __init__(self, arg):
-        if len(arg) < 2:
-            raise Exception("The vector must have at least two dimensions.")
+    def __init__(self, arg=[]):
         list.__init__(self, map(float, arg))
 
     def _getX(self):
@@ -52,21 +50,21 @@ class Vector(list):
                 zeros.append(0)
             return Vector(zeros)
 
-    def module(self):
-        module = 0
+    def norm(self):
+        norm = 0
         for i in self:
-            module += i**2
-        module = math.sqrt(module)
-        return module
+            norm += i**2
+        norm = math.sqrt(norm)
+        return norm
 
-    def projection(self, vector):
-        return self * (self.scalar(vector) / self.module()**2)
-
-    def scalar(self, vector):
+    def dotProduct(self, vector):
         total = 0
         for i, j in zip(self, vector):
             total += i * j
         return total
+
+    def projection(self, vector):
+        return self * (self.dotProduct(vector) / self.norm()**2)
 
     def perpendicular(self):
         if not len(self) == 2:
@@ -81,11 +79,11 @@ class Vector(list):
         else:
             new.y = 1
             new.x = -self.y / self.x
-        new = new / new.module()
+        new = new / new.norm()
         return new
 
     def __abs__(self):
-        return self.module()
+        return self.norm()
 
     def __neg__(self):
         new = []
@@ -118,7 +116,7 @@ class Vector(list):
         return Vector(new)
 
     def __cmp__(self, arg):
-        return cmp(self.module(), float(arg))
+        return cmp(self.norm(), float(arg))
 
     def __rmul__(self, arg):
         return self.__mul__(arg)
