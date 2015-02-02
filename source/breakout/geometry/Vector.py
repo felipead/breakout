@@ -1,48 +1,48 @@
-# encoding: utf-8
 
 import math
 
 class Vector(list):
 
-    def __init__(self, arg=[]):
+    def __init__(self, arg=()):
         list.__init__(self, map(float, arg))
 
-    def _getX(self):
+
+    def _get_x(self):
         return self[0]
 
-    def _setX(self, x):
+    def _set_x(self, x):
         self[0] = float(x)
 
-    # Syntax sugar for the 1st dimension
-    x = property(_getX, _setX)
+    x = property(_get_x, _set_x)
 
-    def _getY(self):
+
+    def _get_y(self):
         return self[1]
 
-    def _setY(self, y):
+    def _set_y(self, y):
         self[1] = float(y)
 
-    # Syntax sugar for the 2nd dimension
-    y = property(_getY, _setY)
+    y = property(_get_y, _set_y)
 
-    def _getZ(self):
+
+    def _get_z(self):
         if len(self) < 3:
-            raise Exception("The vector must have at least three dimensions.")
+            raise Exception("Vector must have at least three dimensions.")
         return self[2]
 
-    def _setZ(self, z):
+    def _set_z(self, z):
         if len(self) < 3:
-            raise Exception("The vector must have at least three dimensions.")
+            raise Exception("Vector must have at least three dimensions.")
         self[2] = float(z)
 
-    # Syntax sugar for the 3rd dimension
-    z = property(_getZ, _setZ)
+    z = property(_get_z, _set_z)
+
 
     def versor(self):
         """Returns the versor of this vector, i.e., the directional unitary vector."""
-        module = abs(self)
-        if module != 0:
-            return self/module
+        norm = abs(self)
+        if norm != 0:
+            return self/norm
         else:
             # Returns the ZERO vector
             zeros = []
@@ -57,14 +57,14 @@ class Vector(list):
         norm = math.sqrt(norm)
         return norm
 
-    def dotProduct(self, vector):
+    def dot_product(self, vector):
         total = 0
         for i, j in zip(self, vector):
             total += i * j
         return total
 
     def projection(self, vector):
-        return self * (self.dotProduct(vector) / self.norm()**2)
+        return self * (self.dot_product(vector) / self.norm()**2)
 
     def perpendicular(self):
         if not len(self) == 2:

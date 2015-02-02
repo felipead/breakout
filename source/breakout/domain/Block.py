@@ -1,40 +1,41 @@
-# encoding: utf-8
-
 from OpenGL.GL import *
 
 from breakout.domain.MovableGameObject import *
-from ..geometry.Rectangle import *
+from breakout.geometry.Rectangle import *
 
 
+# FIXME: create an enum
 BLOCK_COLOR_RED = 1
 BLOCK_COLOR_BLUE = 2
 BLOCK_COLOR_GREEN = 3
 
-BLOCK_POINTS_BLUE = 10
-BLOCK_POINTS_GREEN = 20
-BLOCK_POINTS_RED = 30
+
+_BLOCK_POINTS_BLUE = 10
+_BLOCK_POINTS_GREEN = 20
+_BLOCK_POINTS_RED = 30
+
+_DEFAULT_BLOCK_HEIGHT = 10
+_DEFAULT_BLOCK_WIDTH = 20
 
 
 class Block(GameObject):
 
-    @property
-    def points(self):
-        if self.color == BLOCK_COLOR_BLUE:
-            return BLOCK_POINTS_BLUE
-        elif self.color == BLOCK_COLOR_GREEN:
-            return BLOCK_POINTS_GREEN
-        elif self.color == BLOCK_COLOR_RED:
-            return BLOCK_POINTS_RED
-        else:
-            raise Exception
-
-
-    def __init__(self, game, position, color = BLOCK_COLOR_GREEN, width = 20, height = 10):
-        GameObject.__init__(self, game, position)
+    def __init__(self, engine, position, color, width=_DEFAULT_BLOCK_WIDTH, height=_DEFAULT_BLOCK_HEIGHT):
+        GameObject.__init__(self, engine, position)
         self.width = width
         self.height = height
         self.color = color
 
+    @property
+    def points(self):
+        if self.color == BLOCK_COLOR_BLUE:
+            return _BLOCK_POINTS_BLUE
+        elif self.color == BLOCK_COLOR_GREEN:
+            return _BLOCK_POINTS_GREEN
+        elif self.color == BLOCK_COLOR_RED:
+            return _BLOCK_POINTS_RED
+        else:
+            raise Exception
 
     @property
     def rectangle(self):
@@ -44,54 +45,50 @@ class Block(GameObject):
         bottom = self.position.y - self.height/2.0
         return Rectangle(left, bottom, right, top)
 
-
     def update(self, milliseconds, tick):
         pass
 
-
     def display(self, milliseconds, tick):
-        tick = tick % 10
+        colorBrightness = 0.1 * (tick % 10)
+        if colorBrightness > 1:
+            colorBrightness = 1
 
-        colorTone = 0.1 * tick
-        if colorTone > 1:
-            colorTone = 1
-
-        bv = 1
-        bh = 2
+        verticalBorder = 1
+        horizontalBorder = 2
 
         x = self.position.x
         y = self.position.y
-        h = self.height/2.0 - bv
-        w = self.width/2.0 - bh
+        dy = self.height/2.0 - verticalBorder
+        dx = self.width/2.0 - horizontalBorder
 
-        # outter rectangle
+        self.__drawOuterRectangle(colorBrightness, x, y, dx, dy, horizontalBorder, verticalBorder)
+        self.__drawInnerRectangle(colorBrightness, x, y, dx, dy)
+
+    def __drawOuterRectangle(self, colorBrightness, x, y, dx, dy, horizontalBorder, verticalBorder):
         glBegin(GL_POLYGON)
-        glColor(1 - colorTone, 1 - colorTone, 1 - colorTone)
-        glVertex(x - (w + bh), y + (h + bv))
-        glVertex(x + (w + bh), y + (h + bv))
-        glVertex(x + (w + bh), y - (h + bv))
-        glVertex(x - (w + bh), y - (h + bv))
+        glColor(1 - colorBrightness, 1 - colorBrightness, 1 - colorBrightness)
+        glVertex(x - (dx + horizontalBorder), y + (dy + verticalBorder))
+        glVertex(x + (dx + horizontalBorder), y + (dy + verticalBorder))
+        glVertex(x + (dx + horizontalBorder), y - (dy + verticalBorder))
+        glVertex(x - (dx + horizontalBorder), y - (dy + verticalBorder))
         glEnd()
 
-        # inner rectangle
+    def __drawInnerRectangle(self, colorBrightness, x, y, dx, dy):
         glBegin(GL_POLYGON)
-
         if self.color == BLOCK_COLOR_RED:
-            glColor(colorTone, 0, 0)
+            glColor(colorBrightness, 0, 0)
         elif self.color == BLOCK_COLOR_GREEN:
-            glColor(0, colorTone, 0)
+            glColor(0, colorBrightness, 0)
         elif self.color == BLOCK_COLOR_BLUE:
-            glColor(0, 0, colorTone)
+            glColor(0, 0, colorBrightness)
         else:
             raise Exception("Color not supported.")
 
-        glVertex(x - w, y + h)
-        glVertex(x + w, y + h)
-        glVertex(x + w, y - h)
-        glVertex(x - w, y - h)
+        glVertex(x - dx, y + dy)
+        glVertex(x + dx, y + dy)
+        glVertex(x + dx, y - dy)
+        glVertex(x - dx, y - dy)
         glEnd()
-    
 
     def __str__(self):
         return "Block {Position: " + str(self.position) + ", Points: " + str(self.points) + "}"
-
