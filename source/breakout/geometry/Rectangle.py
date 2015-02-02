@@ -1,7 +1,7 @@
 
 class Rectangle:
 
-    def __init__(self, left = 0, bottom = 0, right = 0, top = 0):
+    def __init__(self, left=0, bottom=0, right=0, top=0):
        self._left = left
        self._bottom = bottom
        self._right = right

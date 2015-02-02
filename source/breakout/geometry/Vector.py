@@ -6,37 +6,33 @@ class Vector(list):
     def __init__(self, arg=()):
         list.__init__(self, map(float, arg))
 
-
-    def _get_x(self):
+    def _getX(self):
         return self[0]
 
-    def _set_x(self, x):
+    def _setX(self, x):
         self[0] = float(x)
 
-    x = property(_get_x, _set_x)
+    x = property(_getX, _setX)
 
-
-    def _get_y(self):
+    def _getY(self):
         return self[1]
 
-    def _set_y(self, y):
+    def _setY(self, y):
         self[1] = float(y)
 
-    y = property(_get_y, _set_y)
+    y = property(_getY, _setY)
 
-
-    def _get_z(self):
+    def _getZ(self):
         if len(self) < 3:
             raise Exception("Vector must have at least three dimensions.")
         return self[2]
 
-    def _set_z(self, z):
+    def _setZ(self, z):
         if len(self) < 3:
             raise Exception("Vector must have at least three dimensions.")
         self[2] = float(z)
 
-    z = property(_get_z, _set_z)
-
+    z = property(_getZ, _setZ)
 
     def versor(self):
         """Returns the versor of this vector, i.e., the directional unitary vector."""
@@ -57,30 +53,30 @@ class Vector(list):
         norm = math.sqrt(norm)
         return norm
 
-    def dot_product(self, vector):
+    def dotProduct(self, vector):
         total = 0
         for i, j in zip(self, vector):
             total += i * j
         return total
 
     def projection(self, vector):
-        return self * (self.dot_product(vector) / self.norm()**2)
+        return self * (self.dotProduct(vector) / self.norm()**2)
 
     def perpendicular(self):
         if not len(self) == 2:
             raise Exception("This operation is only supported on 2-dimension vectors")
 
-        new = Vector()
+        perpendicular = Vector()
         if self.x == 0:
             if self.y == 0:
                 return Vector()
-            new.x = 1
-            new.y = -self.x / self.y
+            perpendicular.x = 1
+            perpendicular.y = -self.x / self.y
         else:
-            new.y = 1
-            new.x = -self.y / self.x
-        new = new / new.norm()
-        return new
+            perpendicular.y = 1
+            perpendicular.x = -self.y / self.x
+        perpendicular /= perpendicular.norm()
+        return perpendicular
 
     def __abs__(self):
         return self.norm()

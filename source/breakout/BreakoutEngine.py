@@ -8,7 +8,7 @@ from breakout.domain.Block import Block
 from breakout.domain.Paddle import Paddle
 from breakout.geometry.Vector import Vector
 from breakout.geometry.Rectangle import Rectangle
-from breakout.util.Drawing import *
+from breakout.util.DrawingUtil import *
 
 
 # FIXME
@@ -317,7 +317,7 @@ class BreakoutEngine:
             self.paddle.speed.x = paddleSpeed
 
     def __buildLevel1(self):
-        self._backgroundTexture = loadTexture(_FILE_BACKGROUND_LEVEL1, False)
+        self._backgroundTexture = DrawingUtil.loadTexture(_FILE_BACKGROUND_LEVEL1, False)
         self._backgroundMusic = pygame.mixer.Sound(_FILE_MUSIC_LEVEL1)
 
         blockWidth = 20

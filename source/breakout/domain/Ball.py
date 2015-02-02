@@ -3,7 +3,7 @@ from pygame.mixer import Sound
 
 from breakout.domain.MovableGameObject import MovableGameObject
 from breakout.geometry.Rectangle import Rectangle
-from breakout.util.Drawing import *
+from breakout.util.DrawingUtil import *
 
 _SOUND_FILE_COLLISION_BALL_WITH_WALL = 'breakout/resources/sounds/Pop.wav'
 _SOUND_FILE_COLLISION_BALL_WITH_BALL = 'breakout/resources/sounds/Bottle.wav'
@@ -175,13 +175,13 @@ class Ball(MovableGameObject):
         x = self.position.x
         y = self.position.y
 
-        # outer circle
-        glColor(1 - colorTone, 1 - colorTone, 1 - colorTone)
-        drawCircle(x, y, self.radius)
+        # # outer circle
+        # color = (1 - colorTone, 1 - colorTone, 1 - colorTone)
+        # DrawingUtil.draw2dCircle(x, y, self.radius, color)
 
         # inner circle
-        glColor(colorTone, 0, 1 - colorTone)
-        drawCircle(x, y, self.radius - 1.0)
+        color = (colorTone, 0, 1 - colorTone)
+        DrawingUtil.drawCircle2d(x, y, self.radius, color)
 
     def __str__(self):
         return "Ball {Position: " + str(self.position) + ", Speed: " + str(self.speed) + "}"
