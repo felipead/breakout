@@ -36,7 +36,6 @@ class Ball(MovableGameObject):
         top = self.position.y + self.radius
         return Rectangle(left, bottom, right, top)
 
-
     def update(self, milliseconds, tick):
         self.position.x += self.speed.x * milliseconds
         self.position.y += self.speed.y * milliseconds
@@ -50,7 +49,6 @@ class Ball(MovableGameObject):
         if thisRect.bottom < (screenRect.bottom):
             self.__soundBallDestroyed.play()
             self.engine.destroyBall(self)
-
 
     def __detectAndProcessCollisions(self):
         collisionType = None
@@ -96,7 +94,7 @@ class Ball(MovableGameObject):
                          break
                          
 
-        # If a collision occured, process it
+        # If a collision occurred, process it
         if collisionType != None:
             if collisionType == _COLLISION_BALL_WALL:
                 self.__soundCollisionBallWithWall.play()
@@ -175,11 +173,6 @@ class Ball(MovableGameObject):
         x = self.position.x
         y = self.position.y
 
-        # # outer circle
-        # color = (1 - colorTone, 1 - colorTone, 1 - colorTone)
-        # DrawingUtil.draw2dCircle(x, y, self.radius, color)
-
-        # inner circle
         color = (colorTone, 0, 1 - colorTone)
         DrawingUtil.drawCircle2d(x, y, self.radius, color)
 
