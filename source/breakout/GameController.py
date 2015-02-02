@@ -1,21 +1,23 @@
-from OpenGL.GLU import gluOrtho2D
-from pygame.constants import *
-from breakout.BreakoutEngine import BreakoutEngine
+from OpenGL.GL import *
+from OpenGL.GLU import *
 
-from util.DrawingUtil import *
+import pygame
+from pygame.constants import *
+from breakout.GameEngine import GameEngine
 
 _FRAMES_PER_SECOND = 60
 _MOUSE_VISIBLE = True
+
+_CANVAS_WIDTH = 250
+_CANVAS_HEIGHT = 300
 _DEFAULT_SCREEN_WIDTH = 500
 _DEFAULT_SCREEN_HEIGHT = 600
 
-CANVAS_WIDTH = 250
-CANVAS_HEIGHT = 300
 
-class BreakoutController:
+class GameController:
 
     def __init__(self):
-        self._engine = BreakoutEngine(CANVAS_WIDTH, CANVAS_HEIGHT)
+        self._engine = GameEngine(_CANVAS_WIDTH, _CANVAS_HEIGHT)
         self._screenWidth = _DEFAULT_SCREEN_WIDTH
         self._screenHeight = _DEFAULT_SCREEN_HEIGHT
 
@@ -23,10 +25,10 @@ class BreakoutController:
         self._initialize()
         self._gameLoop()
 
-
     def _initialize(self):
+        pygame.init()
+        pygame.mouse.set_visible(_MOUSE_VISIBLE)
         pygame.display.set_mode((self._screenWidth, self._screenHeight), OPENGL | DOUBLEBUF)
-        self._handleScreenResizeEvent(self._screenWidth, self._screenHeight)
 
         glClearColor(0.0, 0.0, 0.0, 1.0)
         glShadeModel(GL_FLAT)
@@ -34,15 +36,13 @@ class BreakoutController:
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
         glBlendEquation(GL_FUNC_ADD)
 
-        pygame.init()
-        pygame.mouse.set_visible(_MOUSE_VISIBLE)
+        self._handleScreenResizeEvent(self._screenWidth, self._screenHeight)
         self._engine.initialize()
 
 
     def _gameLoop(self):
         clock = pygame.time.Clock()
         ticks = 0
-
         while True:
             for event in pygame.event.get():
                 self._handleInputEvent(event)
@@ -72,6 +72,7 @@ class BreakoutController:
         elif event.type == KEYDOWN:
             self._handleKeyDownEvent(event.key, event.mod, event.unicode)
 
+
     def _handleScreenResizeEvent(self, width, height):
         self._screenWidth = width
         self._screenHeight = height
@@ -79,14 +80,14 @@ class BreakoutController:
         glViewport(0, 0, width, height)
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()
-        gluOrtho2D(self._engine.canvas.left, self._engine.canvas.right,\
+        gluOrtho2D(self._engine.canvas.left, self._engine.canvas.right,
                    self._engine.canvas.bottom, self._engine.canvas.top)
         glMatrixMode(GL_MODELVIEW)
         glLoadIdentity()
 
     def _handleMouseButtonUpEvent(self, button, coordinates):
-        mapped_coordinates = self._mapScreenCoordinatesToCanvas(coordinates)
-        self._engine.handleMouseButtonUpEvent(button, mapped_coordinates)
+        mappedCoordinates = self._mapScreenCoordinatesToCanvas(coordinates)
+        self._engine.handleMouseButtonUpEvent(button, mappedCoordinates)
 
     def _handleMouseButtonDownEvent(self, button, coordinates):
         mappedCoordinates = self._mapScreenCoordinatesToCanvas(coordinates)
@@ -107,8 +108,8 @@ class BreakoutController:
         verticalCanvasToScreenRatio = self._engine.canvas.height / float(self._screenHeight)
 
         (x, y) = coordinates
-        x = x * horizontalCanvasToScreenRatio
-        y = y * verticalCanvasToScreenRatio
+        x *= horizontalCanvasToScreenRatio
+        y *= verticalCanvasToScreenRatio
 
         y = self._engine.canvas.top - y
-        return (x, y)
+        return x, y
