@@ -13,7 +13,7 @@ class GameObject:
             self.position = position
 
     @property
-    def rectangle(self):
+    def boundaries(self):
         raise NotImplementedError()
 
     def update(self, milliseconds, tick):

@@ -6,8 +6,7 @@ from OpenGL.GLUT import *
 import pygame
 from pygame.mixer import Sound
 from pygame.font import Font
-from pygame.constants import K_q
-from pygame.constants import K_r
+from pygame.constants import K_q, K_r
 
 from breakout.domain.Ball import Ball
 from breakout.domain.Block import Block
@@ -15,16 +14,6 @@ from breakout.domain.Paddle import Paddle
 from breakout.geometry.Vector import Vector
 from breakout.geometry.Rectangle import Rectangle
 from breakout.util.DrawingUtil import DrawingUtil
-
-
-# FIXME
-_DEFAULT_SCREEN_WIDTH = 500
-_DEFAULT_SCREEN_HEIGHT = 600
-CANVAS_SCREEN_RATIO = 0.5
-CANVAS_LEFT = 0
-CANVAS_BOTTOM = 0
-CANVAS_RIGHT = _DEFAULT_SCREEN_WIDTH * CANVAS_SCREEN_RATIO
-CANVAS_TOP = _DEFAULT_SCREEN_HEIGHT * CANVAS_SCREEN_RATIO
 
 GAME_STATE_PLAY = 1
 GAME_STATE_PAUSE = 2
@@ -46,7 +35,7 @@ _MESSAGE_FONT_SIZE = 28
 _MESSAGE_FOREGROUND_COLOR = (255, 0, 0)
 _MESSAGE_BACKGROUND_COLOR = (0, 0, 0)
 
-_BALL_DEFAULT_SPEED = 0.05
+_BALL_DEFAULT_SPEED = 0.075
 _BALL_RADIUS = 3.0
 
 _VELOCITY_BAR_HEIGHT = 3.0
@@ -60,17 +49,13 @@ MOUSE_BUTTON_RIGHT = 3
 MOUSE_BUTTON_SCROLL_UP = 4
 MOUSE_BUTTON_SCROLL_DOWN = 5
 
+
 class BreakoutEngine:
 
-    def __init__(self, canvas):
-        """
-        :param canvas: the rectangle of the screen where the game will display itself. The canvas uses internal game coordinates, not screen coordinates.
-        """
-        self._canvas = canvas
-
-        # The boundaries rectangle is the canvas excluding the information and velocity bars.
-        self._boundaries = Rectangle(canvas.left, canvas.bottom + _VELOCITY_BAR_HEIGHT, \
-            canvas.right, canvas.top - _INFORMATION_BAR_HEIGHT)
+    def __init__(self, canvasWidth, canvasHeight):
+        self._canvas = Rectangle(0, 0, canvasWidth, canvasHeight)
+        self._boundaries = Rectangle(self._canvas.left, self._canvas.bottom + _VELOCITY_BAR_HEIGHT,\
+            self._canvas.right, self._canvas.top - _INFORMATION_BAR_HEIGHT)
 
         self._backgroundTexture = None
         self._backgroundMusic = None
@@ -80,11 +65,14 @@ class BreakoutEngine:
         self._gameState = None
         self._gamePoints = 0
 
-        # Game objects
         self.blocks = list()
         self.balls = list()
         self.paddle = Paddle(self)
         self.paddle.position = Vector((self._boundaries.right/2.0, self._boundaries.bottom + self.paddle.height))
+
+    @property
+    def canvas(self):
+        return self._canvas
 
     @property
     def boundaries(self):
@@ -99,15 +87,10 @@ class BreakoutEngine:
         return self._gamePoints
 
     def initialize(self):
-        # Draws the level objects. Currently, there's only one level (Level 1),
-        # and its definition is "hard coded".
-        # TODO: add support for more levels.
-        # TODO: store the level definition in an external text file
         self.__buildLevel1()
 
         self._informationBarFont = Font(_FILE_FONT_INFORMATION_BAR, _INFORMATION_BAR_FONT_SIZE)
         self._messageFont = Font(_FILE_FONT_MESSAGE, _MESSAGE_FONT_SIZE)
-
         if self._backgroundMusic != None:
             self._backgroundMusic.play(-1) # plays the background music in infinite loop
 
@@ -127,11 +110,6 @@ class BreakoutEngine:
 
 
     def update(self, milliseconds, tick):
-        """
-        Updates the logic of one game cycle
-        :param milliseconds: elapsed milliseconds since last cycle
-        :param tick: number of ticks (cycles) elapsed so far
-        """
         if (self._gameState == None):
             raise Exception("Invalid operation. Did you forget to call initialize() first?")
 
@@ -164,14 +142,6 @@ class BreakoutEngine:
             del ball
 
     def display(self, milliseconds, tick, screen_width, screen_height):
-        """
-        Draws the graphics of one game cycle
-        :param milliseconds: elapsed milliseconds since last cycle
-        :param tick: number of ticks (cycles) elapsed so far
-        :param screen_width: width of the screen
-        :param screen_height: height of the screen
-        """
-
         if self._gameState == None:
             raise Exception("Invalid operation. Did you forget to call initialize() first?")
 
@@ -216,15 +186,15 @@ class BreakoutEngine:
         # Draw the information bar, on the screen top edge
         glColor(0, 0, 0)
         glBegin(GL_POLYGON)
-        glVertex(CANVAS_LEFT, CANVAS_TOP)
-        glVertex(CANVAS_RIGHT, CANVAS_TOP)
-        glVertex(CANVAS_RIGHT, CANVAS_TOP - _INFORMATION_BAR_HEIGHT)
-        glVertex(CANVAS_LEFT, CANVAS_TOP - _INFORMATION_BAR_HEIGHT)
+        glVertex(self._canvas.left, self._canvas.top)
+        glVertex(self._canvas.right, self._canvas.top)
+        glVertex(self._canvas.right, self._canvas.top - _INFORMATION_BAR_HEIGHT)
+        glVertex(self._canvas.left, self._canvas.top - _INFORMATION_BAR_HEIGHT)
         glEnd()
         # Fills the information bar with the game status
         text = (" Level 1  |  Balls %d  |  Points %d " % (len(self.balls), self._gamePoints))
-        x = CANVAS_LEFT
-        y = CANVAS_TOP - _INFORMATION_BAR_HEIGHT
+        x = self._canvas.left
+        y = self._canvas.top - _INFORMATION_BAR_HEIGHT
         rendered = self._informationBarFont.render(text, True, \
                                             _INFORMATION_BAR_FOREGROUND_COLOR, _INFORMATION_BAR_BACKGROUND_COLOR)
         bytes = pygame.image.tostring(rendered, "RGBA", 1)
@@ -236,23 +206,23 @@ class BreakoutEngine:
     def __drawVelocityBar(self):
         glColor(0, 0, 0)
         glBegin(GL_POLYGON)
-        glVertex(CANVAS_LEFT, CANVAS_BOTTOM)
-        glVertex(CANVAS_RIGHT, CANVAS_BOTTOM)
-        glVertex(CANVAS_RIGHT, CANVAS_BOTTOM + _VELOCITY_BAR_HEIGHT)
-        glVertex(CANVAS_LEFT, CANVAS_BOTTOM + _VELOCITY_BAR_HEIGHT)
+        glVertex(self._canvas.left, self._canvas.bottom)
+        glVertex(self._canvas.right, self._canvas.bottom)
+        glVertex(self._canvas.right, self._canvas.bottom + _VELOCITY_BAR_HEIGHT)
+        glVertex(self._canvas.left, self._canvas.bottom + _VELOCITY_BAR_HEIGHT)
         glEnd()
-        half = (CANVAS_RIGHT - CANVAS_LEFT) / 2
+        half = (self._canvas.right - self._canvas.left) / 2
         paddleSpeed = self.paddle.speed.x
         glBegin(GL_POLYGON)
         glColor(0.8, 0.8, 0)
-        glVertex(half, CANVAS_BOTTOM)
-        glVertex(half, CANVAS_BOTTOM + _VELOCITY_BAR_HEIGHT)
-        glVertex(paddleSpeed * half / _PADDLE_MAX_SPEED + half, CANVAS_BOTTOM + _VELOCITY_BAR_HEIGHT)
-        glVertex(paddleSpeed * half / _PADDLE_MAX_SPEED + half, CANVAS_BOTTOM)
+        glVertex(half, self._canvas.bottom)
+        glVertex(half, self._canvas.bottom + _VELOCITY_BAR_HEIGHT)
+        glVertex(paddleSpeed * half / _PADDLE_MAX_SPEED + half, self._canvas.bottom + _VELOCITY_BAR_HEIGHT)
+        glVertex(paddleSpeed * half / _PADDLE_MAX_SPEED + half, self._canvas.bottom)
         glEnd()
         glBegin(GL_LINES)
-        glVertex(CANVAS_LEFT, CANVAS_BOTTOM)
-        glVertex(CANVAS_RIGHT, CANVAS_BOTTOM)
+        glVertex(self._canvas.left, self._canvas.bottom)
+        glVertex(self._canvas.right, self._canvas.bottom)
         glEnd()
 
     def __drawMessage(self):
@@ -269,8 +239,8 @@ class BreakoutEngine:
                                                 _MESSAGE_FOREGROUND_COLOR, _MESSAGE_BACKGROUND_COLOR)
             bytes = pygame.image.tostring(rendered, "RGBA", 1)
             size = rendered.get_size()
-            x = (CANVAS_RIGHT - CANVAS_LEFT) / 2 - size[0] / 4
-            y = (CANVAS_TOP - CANVAS_BOTTOM) / 2 - size[1] / 4
+            x = (self._canvas.right - self._canvas.left) / 2 - size[0] / 4
+            y = (self._canvas.top - self._canvas.bottom) / 2 - size[1] / 4
             glRasterPos2d(x, y)
             glPixelZoom(1, 1)
             glDrawPixels(size[0], size[1], GL_RGBA, GL_UNSIGNED_BYTE, bytes)
@@ -321,6 +291,9 @@ class BreakoutEngine:
             paddleSpeed *= _PADDLE_MAX_SPEED
             self.paddle.speed.x = paddleSpeed
 
+
+    # TODO: add support for more levels.
+    # TODO: store the level definition in an external text file
     def __buildLevel1(self):
         self._backgroundTexture = DrawingUtil.loadTexture(_FILE_BACKGROUND_LEVEL1, False)
         self._backgroundMusic = Sound(_FILE_MUSIC_LEVEL1)

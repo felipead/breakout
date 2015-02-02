@@ -37,7 +37,7 @@ class Block(GameObject):
             raise Exception
 
     @property
-    def rectangle(self):
+    def boundaries(self):
         left = self.position.x - self.width/2.0
         right = self.position.x + self.width/2.0
         top = self.position.y + self.height/2.0

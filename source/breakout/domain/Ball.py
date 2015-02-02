@@ -29,7 +29,7 @@ class Ball(MovableGameObject):
         self.__soundBallDestroyed = Sound(_SOUND_FILE_BALL_DESTROYED)
 
     @property
-    def rectangle(self):
+    def boundaries(self):
         left = self.position.x - self.radius
         right = self.position.x + self.radius
         bottom = self.position.y - self.radius
@@ -45,7 +45,7 @@ class Ball(MovableGameObject):
         # Check if the ball crossed the bottom screen edge (in this case, the ball should be
         # destroyed, and the game status updated)
         screenRect = self.engine.boundaries
-        thisRect = self.rectangle
+        thisRect = self.boundaries
         if thisRect.bottom < (screenRect.bottom):
             self.__soundBallDestroyed.play()
             self.engine.destroyBall(self)
@@ -64,7 +64,7 @@ class Ball(MovableGameObject):
         # should be destroyed (this case will not be checked here).
         if collisionType == None:
             screenRect = self.engine.boundaries
-            thisRect = self.rectangle
+            thisRect = self.boundaries
             if thisRect.left <= screenRect.left:
                 self.speed.x = abs(self.speed.x)
                 collisionType = _COLLISION_BALL_WALL
@@ -114,8 +114,8 @@ class Ball(MovableGameObject):
         if obj == self:
             return False
             
-        A = self.rectangle # A is this object rectangle
-        B = obj.rectangle # B is target object rectangle
+        A = self.boundaries # A is this object rectangle
+        B = obj.boundaries # B is target object rectangle
     
         verticalIntersection = False
         topIntersection = False
