@@ -1,14 +1,20 @@
 from datetime import datetime
 
+from OpenGL.GL import *
 from OpenGL.GLUT import *
+
+import pygame
+from pygame.mixer import Sound
 from pygame.font import Font
+from pygame.constants import K_q
+from pygame.constants import K_r
 
 from breakout.domain.Ball import Ball
 from breakout.domain.Block import Block
 from breakout.domain.Paddle import Paddle
 from breakout.geometry.Vector import Vector
 from breakout.geometry.Rectangle import Rectangle
-from breakout.util.DrawingUtil import *
+from breakout.util.DrawingUtil import DrawingUtil
 
 
 # FIXME
@@ -19,7 +25,6 @@ CANVAS_LEFT = 0
 CANVAS_BOTTOM = 0
 CANVAS_RIGHT = _DEFAULT_SCREEN_WIDTH * CANVAS_SCREEN_RATIO
 CANVAS_TOP = _DEFAULT_SCREEN_HEIGHT * CANVAS_SCREEN_RATIO
-
 
 GAME_STATE_PLAY = 1
 GAME_STATE_PAUSE = 2
@@ -318,7 +323,7 @@ class BreakoutEngine:
 
     def __buildLevel1(self):
         self._backgroundTexture = DrawingUtil.loadTexture(_FILE_BACKGROUND_LEVEL1, False)
-        self._backgroundMusic = pygame.mixer.Sound(_FILE_MUSIC_LEVEL1)
+        self._backgroundMusic = Sound(_FILE_MUSIC_LEVEL1)
 
         blockWidth = 20
         blockHeight = 10
