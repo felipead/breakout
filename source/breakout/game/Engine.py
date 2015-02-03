@@ -6,8 +6,8 @@ import pygame
 from pygame.font import Font
 from pygame.constants import K_q, K_r
 
-from breakout.game.level.LevelFactory import LevelFactory
-from breakout.game.domain.Paddle import Paddle
+from breakout.game.LevelFactory import LevelFactory
+from breakout.domain.Paddle import Paddle
 from breakout.geometry.Vector import Vector
 from breakout.geometry.Rectangle import Rectangle
 
