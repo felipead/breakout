@@ -1,10 +1,10 @@
-from breakout.Controller import Controller
+from breakout.game.GameController import GameController
 
 
 class Breakout:
 
     def __init__(self):
-        self.controller = Controller()
+        self.controller = GameController()
 
     def run(self):
         self.controller.run()

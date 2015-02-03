@@ -1,14 +1,17 @@
 from OpenGL.GL import *
 
-from breakout.domain.MovableGameObject import MovableGameObject
+from breakout.domain.AbstractMovableGameObject import AbstractMovableGameObject
 from breakout.geometry.Rectangle import Rectangle
 
 _PADDLE_HEIGHT = 5.0
 
-class Paddle(MovableGameObject):
+_PADDLE_VERTICAL_BORDER = 1
+_PADDLE_HORIZONTAL_BORDER = 2
+
+class Paddle(AbstractMovableGameObject):
 
     def __init__(self, engine, position = None, speed = None, width = 40):
-        MovableGameObject.__init__(self, engine, position, speed)
+        AbstractMovableGameObject.__init__(self, engine, position, speed)
         self._width = width
         self._height = _PADDLE_HEIGHT
 
@@ -29,17 +32,17 @@ class Paddle(MovableGameObject):
         return Rectangle(left, bottom, right, top)
 
     def update(self, milliseconds, tick):
-        # Moves the paddle (horizontally only). Speed is in pixels per second.
         self.position.x += self.speed.x * milliseconds
+        self.__checkBoundaries()
 
-        # Don't let the paddle cross the screen boundaries
+    def __checkBoundaries(self):
         screenRectangle = self.engine.boundaries
         thisRectangle = self.boundaries
         if thisRectangle.left <= screenRectangle.left:
-            self.position.x = screenRectangle.left + self._width/2.0
+            self.position.x = screenRectangle.left + self._width / 2.0
             self.speed.x = 0
         elif thisRectangle.right >= screenRectangle.right:
-            self.position.x = screenRectangle.right - self._width/2.0
+            self.position.x = screenRectangle.right - self._width / 2.0
             self.speed.x = 0
 
     def display(self, milliseconds, tick):
@@ -47,15 +50,12 @@ class Paddle(MovableGameObject):
         if colorTone > 1:
             colorTone = 1
 
-        verticalBorder = 1
-        horizontalBorder = 2
-
         x = self.position.x
         y = self.position.y
-        dy = self._height/2 - verticalBorder
-        dx = self._width/2 - horizontalBorder
+        dy = self._height/2 - _PADDLE_VERTICAL_BORDER
+        dx = self._width/2 - _PADDLE_HORIZONTAL_BORDER
 
-        self.__drawOuterRectangle(colorTone, x, y, dx, dy, horizontalBorder, verticalBorder)
+        self.__drawOuterRectangle(colorTone, x, y, dx, dy, _PADDLE_HORIZONTAL_BORDER, _PADDLE_VERTICAL_BORDER)
         self.__drawInnerRectangle(colorTone, x, y, dx, dy)
 
     def __drawOuterRectangle(self, colorTone, x, y, dx, dy, horizontalBorder, verticalBorder):

@@ -2,7 +2,7 @@ import random
 
 from pygame.mixer import Sound
 
-from breakout.domain.MovableGameObject import MovableGameObject
+from breakout.domain.AbstractMovableGameObject import AbstractMovableGameObject
 from breakout.geometry.Rectangle import Rectangle
 from breakout.util.Drawing import *
 
@@ -18,10 +18,10 @@ _COLLISION_BALL_BALL = 2
 _COLLISION_BALL_BLOCK = 4
 _COLLISION_BALL_PADDLE = 8
 
-class Ball(MovableGameObject):
+class Ball(AbstractMovableGameObject):
 
     def __init__(self, engine, position, speed, radius):
-        MovableGameObject.__init__(self, engine, position, speed)
+        AbstractMovableGameObject.__init__(self, engine, position, speed)
         self.radius = radius
 
         self.__soundCollisionBallWithWall = Sound(_SOUND_FILE_COLLISION_BALL_WITH_WALL)

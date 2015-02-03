@@ -3,7 +3,7 @@ from OpenGL.GLU import *
 import pygame
 from pygame.constants import *
 
-from breakout.game.Engine import Engine
+from breakout.game.GameEngine import GameEngine
 
 
 _FRAMES_PER_SECOND = 60
@@ -15,10 +15,10 @@ _DEFAULT_SCREEN_WIDTH = 500
 _DEFAULT_SCREEN_HEIGHT = 600
 
 
-class Controller:
+class GameController:
 
     def __init__(self):
-        self.__engine = Engine(_CANVAS_WIDTH, _CANVAS_HEIGHT)
+        self.__engine = GameEngine(_CANVAS_WIDTH, _CANVAS_HEIGHT)
         self.__screenWidth = _DEFAULT_SCREEN_WIDTH
         self.__screenHeight = _DEFAULT_SCREEN_HEIGHT
 

@@ -1,12 +1,10 @@
 from breakout.geometry.Vector import Vector
 
 
-# Abstract class
-class GameObject:
+class AbstractGameObject:
 
     def __init__(self, engine, position=None):
         self.engine = engine
-
         if position is None:
             self.position = Vector((0,0))
         else:

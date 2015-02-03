@@ -1,13 +1,9 @@
 from OpenGL.GL import *
 
-from breakout.domain.GameObject import GameObject
+from breakout.domain.AbstractGameObject import AbstractGameObject
+from breakout.domain.Color import Color
 from breakout.geometry.Rectangle import Rectangle
 
-
-# FIXME: create an enum
-BLOCK_COLOR_RED = 1
-BLOCK_COLOR_BLUE = 2
-BLOCK_COLOR_GREEN = 3
 
 _BLOCK_POINTS_BLUE = 10
 _BLOCK_POINTS_GREEN = 20
@@ -17,24 +13,24 @@ _DEFAULT_BLOCK_HEIGHT = 10
 _DEFAULT_BLOCK_WIDTH = 20
 
 
-class Block(GameObject):
+class Block(AbstractGameObject):
 
     def __init__(self, engine, position, color, width=_DEFAULT_BLOCK_WIDTH, height=_DEFAULT_BLOCK_HEIGHT):
-        GameObject.__init__(self, engine, position)
+        AbstractGameObject.__init__(self, engine, position)
         self.width = width
         self.height = height
         self.color = color
 
     @property
     def points(self):
-        if self.color == BLOCK_COLOR_BLUE:
+        if self.color == Color.BLUE:
             return _BLOCK_POINTS_BLUE
-        elif self.color == BLOCK_COLOR_GREEN:
+        elif self.color == Color.GREEN:
             return _BLOCK_POINTS_GREEN
-        elif self.color == BLOCK_COLOR_RED:
+        elif self.color == Color.RED:
             return _BLOCK_POINTS_RED
         else:
-            raise Exception
+            raise Exception("Color not supported.")
 
     @property
     def boundaries(self):
@@ -64,8 +60,8 @@ class Block(GameObject):
         self.__drawInnerRectangle(colorBrightness, x, y, dx, dy)
 
     def __drawOuterRectangle(self, colorBrightness, x, y, dx, dy, horizontalBorder, verticalBorder):
-        glBegin(GL_POLYGON)
         glColor(1 - colorBrightness, 1 - colorBrightness, 1 - colorBrightness)
+        glBegin(GL_POLYGON)
         glVertex(x - (dx + horizontalBorder), y + (dy + verticalBorder))
         glVertex(x + (dx + horizontalBorder), y + (dy + verticalBorder))
         glVertex(x + (dx + horizontalBorder), y - (dy + verticalBorder))
@@ -73,16 +69,10 @@ class Block(GameObject):
         glEnd()
 
     def __drawInnerRectangle(self, colorBrightness, x, y, dx, dy):
-        glBegin(GL_POLYGON)
-        if self.color == BLOCK_COLOR_RED:
-            glColor(colorBrightness, 0, 0)
-        elif self.color == BLOCK_COLOR_GREEN:
-            glColor(0, colorBrightness, 0)
-        elif self.color == BLOCK_COLOR_BLUE:
-            glColor(0, 0, colorBrightness)
-        else:
-            raise Exception("Color not supported.")
+        rgb = self.color.value
+        glColor(rgb[0] * colorBrightness, rgb[1] * colorBrightness, rgb[2] * colorBrightness)
 
+        glBegin(GL_POLYGON)
         glVertex(x - dx, y + dy)
         glVertex(x + dx, y + dy)
         glVertex(x + dx, y - dy)

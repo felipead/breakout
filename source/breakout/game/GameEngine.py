@@ -1,47 +1,34 @@
 from datetime import datetime
-
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 import pygame
 from pygame.font import Font
-from pygame.constants import K_q, K_r
+from pygame.constants import K_q, K_r, K_SPACE, K_p
 
+from breakout.util.MouseButton import MouseButton
+from breakout.game.GameState import GameState
 from breakout.game.LevelFactory import LevelFactory
 from breakout.domain.Paddle import Paddle
 from breakout.geometry.Vector import Vector
 from breakout.geometry.Rectangle import Rectangle
 
-GAME_STATE_PLAY = 1
-GAME_STATE_PAUSE = 2
-GAME_STATE_HALT = 3
-GAME_STATE_HALT_RUN_CYCLE = 4
-GAME_STATE_LOST = 5
-GAME_STATE_WON = 6
 
-_FILE_FONT_INFORMATION_BAR = 'breakout/resources/fonts/pf_tempesta_five_extended.ttf'
-_FILE_FONT_MESSAGE = 'breakout/resources/fonts/pf_tempesta_five_extended.ttf'
-
+_INFORMATION_BAR_HEIGHT = 12.0
+_INFORMATION_BAR_FONT_FILE = 'breakout/resources/fonts/pf_tempesta_five_extended.ttf'
 _INFORMATION_BAR_FONT_SIZE = 14
 _INFORMATION_BAR_FOREGROUND_COLOR = (255, 255, 255)
 _INFORMATION_BAR_BACKGROUND_COLOR = (0, 0, 0)
 
-_MESSAGE_FONT_SIZE = 28
-_MESSAGE_FOREGROUND_COLOR = (255, 0, 0)
-_MESSAGE_BACKGROUND_COLOR = (0, 0, 0)
-
 _VELOCITY_BAR_HEIGHT = 3.0
-_INFORMATION_BAR_HEIGHT = 12.0
-
 _PADDLE_MAX_SPEED = 0.75
 
-MOUSE_BUTTON_LEFT = 1
-MOUSE_BUTTON_MIDDLE = 2
-MOUSE_BUTTON_RIGHT = 3
-MOUSE_BUTTON_SCROLL_UP = 4
-MOUSE_BUTTON_SCROLL_DOWN = 5
+_MESSAGE_BOX_FONT_FILE = 'breakout/resources/fonts/pf_tempesta_five_extended.ttf'
+_MESSAGE_BOX_FONT_SIZE = 28
+_MESSAGE_BOX_FOREGROUND_COLOR = (255, 0, 0)
+_MESSAGE_BOX_BACKGROUND_COLOR = (0, 0, 0)
 
 
-class Engine:
+class GameEngine:
 
     def __init__(self, canvasWidth, canvasHeight):
         self.__canvas = Rectangle(0, 0, canvasWidth, canvasHeight)
@@ -49,18 +36,16 @@ class Engine:
             self.__canvas.right, self.__canvas.top - _INFORMATION_BAR_HEIGHT)
 
         self.__informationBarFont = None
-        self.__messageFont = None
+        self.__messageBoxFont = None
 
         self.__levelFactory = LevelFactory(self)
         self.__currentLevel = None
+        self.__state = None
+        self.__totalPoints = 0
 
-        self.__gameState = None
-        self.__gamePoints = 0
-
-        self.__blocks = list()
-        self.__balls = list()
+        self.__blocks = []
+        self.__balls = []
         self.__paddle = Paddle(self)
-        self.__paddle.position = Vector((self.__boundaries.right/2.0, self.__boundaries.bottom + self.__paddle.height))
 
     @property
     def balls(self):
@@ -90,61 +75,69 @@ class Engine:
         return self.__boundaries
 
     @property
-    def gameState(self):
-        return self.__gameState
+    def state(self):
+        return self.__state
 
     @property
-    def gamePoints(self):
-        return self.__gamePoints
+    def totalPoints(self):
+        return self.__totalPoints
 
 
     def initialize(self):
-        self.__informationBarFont = Font(_FILE_FONT_INFORMATION_BAR, _INFORMATION_BAR_FONT_SIZE)
-        self.__messageFont = Font(_FILE_FONT_MESSAGE, _MESSAGE_FONT_SIZE)
+        self.__informationBarFont = Font(_INFORMATION_BAR_FONT_FILE, _INFORMATION_BAR_FONT_SIZE)
+        self.__messageBoxFont = Font(_MESSAGE_BOX_FONT_FILE, _MESSAGE_BOX_FONT_SIZE)
 
-        self._loadLevel(self.__levelFactory.getLevel(1))
-        if self.__currentLevel.backgroundMusic is not None:
-            self.__currentLevel.backgroundMusic.play(-1)
+        self.__paddle.position = Vector((self.__boundaries.right/2.0, self.__boundaries.bottom + self.__paddle.height))
 
-        self.__gameState = GAME_STATE_PAUSE
+        self.__loadLevel(self.__levelFactory.buildLevel(1))
+        self.__playBackgroundMusic()
+        self.__state = GameState.PLAY
 
-    def _loadLevel(self, level):
+    def reset(self):
+        self.__balls = []
+        self.__blocks = []
+        self.__paddle.position.x = self.boundaries.right/2.0
+        self.__totalPoints = 0
+        self.__stopBackgroundMusic()
+        self.initialize()
+
+    def __loadLevel(self, level):
         self.__balls = list(level.balls)
         self.__blocks = list(level.blocks)
         self.__currentLevel = level
 
-    def reset(self):
+    def __playBackgroundMusic(self):
+        if self.__currentLevel.backgroundMusic is not None:
+            self.__currentLevel.backgroundMusic.play(-1)
+
+    def __stopBackgroundMusic(self):
         if self.__currentLevel.backgroundMusic is not None:
             self.__currentLevel.backgroundMusic.stop()
 
-        del self.__balls[0:len(self.__balls)]
-        del self.__blocks[0:len(self.__blocks)]
-        self.__gamePoints = 0
-        self.__paddle.position.x = self.boundaries.right/2.0
-
-        self.initialize()
-
     def update(self, milliseconds, tick):
-        if self.__gameState is None:
+        if self.__state is None:
             raise Exception("Invalid operation. Did you forget to call initialize() first?")
 
-        # The player looses the game when all balls are gone.
-        # The player wins the game when all blocks are destroyed.
-        if len(self.__balls) == 0:
-            self.__gameState = GAME_STATE_LOST
-        elif len(self.__blocks) == 0:
-            self.__gameState = GAME_STATE_WON
+        self.__updateState()
+        if self.__state == GameState.PLAY:
+            self.__updateGameObjects(milliseconds, tick)
 
-        if (self.__gameState == GAME_STATE_PLAY) or (self.__gameState == GAME_STATE_HALT_RUN_CYCLE):
+    def __updateState(self):
+        if len(self.__balls) == 0:
+            self.__state = GameState.LOST
+        elif len(self.__blocks) == 0:
+            self.__state = GameState.WON
+        if self.__state == GameState.HALT_RUN_CYCLE:
+            self.__state = GameState.HALT
+
+    def __updateGameObjects(self, milliseconds, tick):
+        if (self.__state == GameState.PLAY) or (self.__state == GameState.HALT_RUN_CYCLE):
             for gameObject in self.gameObjects:
                 gameObject.update(milliseconds, tick)
 
-        if self.__gameState == GAME_STATE_HALT_RUN_CYCLE:
-            self.__gameState = GAME_STATE_HALT
-
     def destroyBlock(self, block):
         if block in self.__blocks:
-            self.__gamePoints += block.points
+            self.__totalPoints += block.points
             self.__blocks.remove(block)
             del block
 
@@ -154,8 +147,7 @@ class Engine:
             del ball
 
     def display(self, milliseconds, tick, screen_width, screen_height):
-
-        if self.__gameState is None:
+        if self.__state is None:
             raise Exception("Invalid operation. Did you forget to call initialize() first?")
         glClear(GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT)   # clear the screen
         self.__drawBackground(screen_height, screen_width)
@@ -198,17 +190,18 @@ class Engine:
         glVertex(self.__canvas.right, self.__canvas.top - _INFORMATION_BAR_HEIGHT)
         glVertex(self.__canvas.left, self.__canvas.top - _INFORMATION_BAR_HEIGHT)
         glEnd()
+
         # Fills the information bar with the game status
-        text = (" Level 1  |  Balls %d  |  Points %d " % (len(self.__balls), self.__gamePoints))
+        status = (" Level %d  |  Balls %d  |  Points %d " % (self.__currentLevel.index, len(self.__balls), self.__totalPoints))
         x = self.__canvas.left
         y = self.__canvas.top - _INFORMATION_BAR_HEIGHT
-        rendered = self.__informationBarFont.render(text, True,
-                                            _INFORMATION_BAR_FOREGROUND_COLOR, _INFORMATION_BAR_BACKGROUND_COLOR)
-        renderedTextBytes = pygame.image.tostring(rendered, "RGBA", 1)
-        size = rendered.get_size()
         glRasterPos2d(x, y)
         glPixelZoom(1, 1)
-        glDrawPixels(size[0], size[1], GL_RGBA, GL_UNSIGNED_BYTE, renderedTextBytes)
+        renderedStatus = self.__informationBarFont.render(status, True,
+                                            _INFORMATION_BAR_FOREGROUND_COLOR, _INFORMATION_BAR_BACKGROUND_COLOR)
+        renderedStatusBytes = pygame.image.tostring(renderedStatus, "RGBA", 1)
+        renderedStatusSize = renderedStatus.get_size()
+        glDrawPixels(renderedStatusSize[0], renderedStatusSize[1], GL_RGBA, GL_UNSIGNED_BYTE, renderedStatusBytes)
 
     def __drawVelocityBar(self):
         glColor(0, 0, 0)
@@ -233,18 +226,18 @@ class Engine:
         glEnd()
 
     def __drawMessage(self):
-        if self.__gameState == GAME_STATE_PAUSE:
+        if self.__state == GameState.PAUSE:
             text = "Pause"
-        elif self.__gameState == GAME_STATE_LOST:
+        elif self.__state == GameState.LOST:
             text = "Game Over"
-        elif self.__gameState == GAME_STATE_WON:
+        elif self.__state == GameState.WON:
             text = "Congratulations"
         else:
             text = None
 
         if text is not None:
-            renderedText = self.__messageFont.render(text, True,
-                                                _MESSAGE_FOREGROUND_COLOR, _MESSAGE_BACKGROUND_COLOR)
+            renderedText = self.__messageBoxFont.render(text, True,
+                                                _MESSAGE_BOX_FOREGROUND_COLOR, _MESSAGE_BOX_BACKGROUND_COLOR)
             renderedTextBytes = pygame.image.tostring(renderedText, "RGBA", 1)
             size = renderedText.get_size()
             x = (self.__canvas.right - self.__canvas.left) / 2 - size[0] / 4
@@ -265,17 +258,14 @@ class Engine:
         print
 
     def handleMouseButtonDownEvent(self, button, coordinates):
-        if button == MOUSE_BUTTON_RIGHT:
+        if button == MouseButton.RIGHT:
             self.__printDebugInfo()
-            if self.__gameState == GAME_STATE_HALT:
-                self.__gameState = GAME_STATE_HALT_RUN_CYCLE
+            if self.__state == GameState.HALT:
+                self.__state = GameState.HALT_RUN_CYCLE
             else:
-                self.__gameState = GAME_STATE_HALT
-        if button == MOUSE_BUTTON_LEFT:
-            if self.__gameState == GAME_STATE_HALT or self.__gameState == GAME_STATE_PAUSE:
-                self.__gameState = GAME_STATE_PLAY
-            elif self.__gameState == GAME_STATE_PLAY:
-                self.__gameState = GAME_STATE_PAUSE
+                self.__state = GameState.HALT
+        if button == MouseButton.LEFT:
+            self.__togglePauseState()
 
     def handleMouseButtonUpEvent(self, button, coordinates):
         pass
@@ -287,14 +277,23 @@ class Engine:
         if key == K_r:
             print "Game reset."
             self.reset()
+        if key == K_SPACE or key == K_p:
+            self.__togglePauseState()
+
+    def __togglePauseState(self):
+        if self.__state == GameState.HALT or self.__state == GameState.PAUSE:
+            self.__state = GameState.PLAY
+        elif self.__state == GameState.PLAY:
+            self.__state = GameState.PAUSE
 
     def handleKeyUpEvent(self, key, modifiers):
         pass
 
     def handleMouseMoveEvent(self, absoluteCoordinates, relativeCoordinates, buttons):
-        if self.__gameState == GAME_STATE_PLAY or self.__gameState == GAME_STATE_HALT or self.__gameState == GAME_STATE_HALT_RUN_CYCLE:
+        if self.__state == GameState.PLAY or self.__state == GameState.HALT or self.__state == GameState.HALT_RUN_CYCLE:
             (x, y) = absoluteCoordinates
             median = (self.__canvas.right - self.__canvas.left) / 2
             paddleSpeed = (x - median) / median
             paddleSpeed *= _PADDLE_MAX_SPEED
             self.__paddle.speed.x = paddleSpeed
+

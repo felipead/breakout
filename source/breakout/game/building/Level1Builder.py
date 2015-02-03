@@ -1,9 +1,10 @@
 from pygame.mixer import Sound
+from breakout.domain.Color import Color
 
 from breakout.game.building.AbstractLevelBuilder import AbstractLevelBuilder
 from breakout.domain.Ball import Ball
 from breakout.domain.Block import Block
-from breakout.domain.Level import Level
+from breakout.game.Level import Level
 from breakout.geometry.Vector import Vector
 from breakout.util.Drawing import Drawing
 
@@ -25,30 +26,37 @@ class Level1Builder(AbstractLevelBuilder):
         level.backgroundTexture = Drawing.loadTexture(_FILE_BACKGROUND_LEVEL1, False)
         level.backgroundMusic = Sound(_FILE_MUSIC_LEVEL1)
 
-        level.blocks = self.__buildBlocks(self._engine.boundaries)
-        level.balls = self.__buildBalls(self._engine.boundaries)
+        level.blocks = self.__buildBlocks()
+        level.balls = self.__buildBalls()
 
         return level
 
-    def __buildBlocks(self, boundaries):
+    def __buildBlocks(self):
+        boundaries = self._engine.boundaries
+
         columns = (int)(boundaries.width // _BLOCK_WIDTH)
         rows = (int)(boundaries.height // _BLOCK_HEIGHT)
         blocks = []
+
         for i in xrange(3, columns - 1):
             for j in xrange(15, rows - 3):
-                color = j % 3 + 1
+                color = self.__chooseColor(j % 3 + 1)
                 position = Vector((boundaries.left + i * _BLOCK_WIDTH, boundaries.bottom + j * _BLOCK_HEIGHT))
                 block = Block(self._engine, position, color=color, width=_BLOCK_WIDTH, height=_BLOCK_HEIGHT)
                 blocks.append(block)
+
         for i in xrange(3, columns - 1):
-            color = i % 3 + 1
+            color = self.__chooseColor(i % 3 + 1)
             j = 10
             position = Vector((boundaries.left + i * _BLOCK_WIDTH, boundaries.bottom + j * _BLOCK_HEIGHT))
             block = Block(self._engine, position, color=color, width=_BLOCK_WIDTH, height=_BLOCK_HEIGHT)
             blocks.append(block)
+
         return blocks
 
-    def __buildBalls(self, boundaries):
+    def __buildBalls(self):
+        boundaries = self._engine.boundaries
+
         ball1 = Ball(self._engine,
                      position=Vector((boundaries.width / 2, boundaries.top - _BALL_RADIUS)),
                      speed=Vector((-_BALL_SPEED, _BALL_SPEED)), radius=_BALL_RADIUS)
@@ -60,3 +68,11 @@ class Level1Builder(AbstractLevelBuilder):
                      speed=Vector((_BALL_SPEED, -_BALL_SPEED)), radius=_BALL_RADIUS)
 
         return [ball1, ball2, ball3]
+
+    def __chooseColor(self, index):
+        if index == 1:
+            return Color.RED
+        elif index == 2:
+            return Color.GREEN
+        elif index == 3:
+            return Color.BLUE

@@ -1,12 +1,11 @@
-from breakout.domain.GameObject import GameObject
+from breakout.domain.AbstractGameObject import AbstractGameObject
 from breakout.geometry.Vector import Vector
 
 
-# Abstract class
-class MovableGameObject(GameObject):
+class AbstractMovableGameObject(AbstractGameObject):
 
     def __init__(self, engine, position, speed=None):
-        GameObject.__init__(self, engine, position)
+        AbstractGameObject.__init__(self, engine, position)
         if speed is None:
             self.speed = Vector((0,0))
         else:
