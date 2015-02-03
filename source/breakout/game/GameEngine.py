@@ -154,7 +154,7 @@ class GameEngine:
         self.__drawVelocityBar()
         self.__drawInformationBar()
         self.__drawGameObjects(milliseconds, tick)
-        self.__drawMessage()
+        self.__drawMessageBox()
 
 
     def __drawBackground(self, screen_height, screen_width):
@@ -225,7 +225,7 @@ class GameEngine:
         glVertex(self.__canvas.right, self.__canvas.bottom)
         glEnd()
 
-    def __drawMessage(self):
+    def __drawMessageBox(self):
         if self.__state == GameState.PAUSE:
             text = "Pause"
         elif self.__state == GameState.LOST:
@@ -237,7 +237,7 @@ class GameEngine:
 
         if text is not None:
             renderedText = self.__messageBoxFont.render(text, True,
-                                                _MESSAGE_BOX_FOREGROUND_COLOR, _MESSAGE_BOX_BACKGROUND_COLOR)
+                                                        _MESSAGE_BOX_FOREGROUND_COLOR, _MESSAGE_BOX_BACKGROUND_COLOR)
             renderedTextBytes = pygame.image.tostring(renderedText, "RGBA", 1)
             size = renderedText.get_size()
             x = (self.__canvas.right - self.__canvas.left) / 2 - size[0] / 4

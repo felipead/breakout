@@ -1,4 +1,5 @@
 import random
+from enum import IntEnum
 
 from pygame.mixer import Sound
 
@@ -13,17 +14,19 @@ _SOUND_FILE_COLLISION_BALL_WITH_BLOCK = 'breakout/resources/sounds/Tuntz.wav'
 _SOUND_FILE_COLLISION_BALL_WITH_PADDLE = 'breakout/resources/sounds/Ping.wav'
 _SOUND_FILE_BALL_DESTROYED = 'breakout/resources/sounds/Basso.wav'
 
-_COLLISION_BALL_WALL = 1
-_COLLISION_BALL_BALL = 2
-_COLLISION_BALL_BLOCK = 4
-_COLLISION_BALL_PADDLE = 8
+
+class _CollisionType(IntEnum):
+    WALL = 1
+    BALL = 2
+    BLOCK = 4
+    PADDLE = 8
+
 
 class Ball(AbstractMovableGameObject):
 
     def __init__(self, engine, position, speed, radius):
         AbstractMovableGameObject.__init__(self, engine, position, speed)
         self.radius = radius
-
         self.__soundCollisionBallWithWall = Sound(_SOUND_FILE_COLLISION_BALL_WITH_WALL)
         self.__soundCollisionBallWithBall = Sound(_SOUND_FILE_COLLISION_BALL_WITH_BALL)
         self.__soundCollisionBallWithBlock = Sound(_SOUND_FILE_COLLISION_BALL_WITH_BLOCK)
@@ -38,79 +41,99 @@ class Ball(AbstractMovableGameObject):
         top = self.position.y + self.radius
         return Rectangle(left, bottom, right, top)
 
+
+    def display(self, milliseconds, tick):
+        colorTone = 0.1 * (tick % 10)
+        if colorTone > 1:
+            colorTone = 1
+
+        x = self.position.x
+        y = self.position.y
+
+        color = (colorTone, 0, 1 - colorTone)
+        Drawing.drawCircle2d(x, y, self.radius, color)
+
+
     def update(self, milliseconds, tick):
         self.position.x += self.speed.x * milliseconds
         self.position.y += self.speed.y * milliseconds
 
-        self.__detectAndProcessCollisions()
+        self.__detectCollisions()
+        self.__checkIfBallCrossedBottomBoundary()
 
-        # Check if the ball crossed the bottom screen edge (in this case, the ball should be
-        # destroyed, and the game status updated)
-        screenRect = self.engine.boundaries
-        thisRect = self.boundaries
-        if thisRect.bottom < screenRect.bottom:
+
+    def __checkIfBallCrossedBottomBoundary(self):
+        screenRectangle = self.engine.boundaries
+        thisRectangle = self.boundaries
+        if thisRectangle.bottom < screenRectangle.bottom:
             self.__soundBallDestroyed.play()
             self.engine.destroyBall(self)
 
-    def __detectAndProcessCollisions(self):
-        collisionType = None
-        
-        # Check if the ball collides with the paddle
-        collision = self.__processObjectCollision(self.engine.paddle)
+
+    def __detectCollisions(self):
+        collisionType = self.__detectCollisionWithPaddle()
+        if collisionType is None:
+            collisionType = self.__detectCollisionWithWallEdges()
+        if collisionType is None:
+            collisionType = self.__detectCollisionWithBlock()
+        if collisionType is None:
+            collisionType = self.__detectCollisionWithAnotherBall()
+
+        self.__playCollisionSound(collisionType)
+
+        return collisionType
+
+    def __detectCollisionWithPaddle(self):
+        collision = self.__detectCollisionWithObject(self.engine.paddle)
         if collision:
             self.speed.y = abs(self.speed.y)
-            collisionType = _COLLISION_BALL_PADDLE
-        
-        # Check if the ball collides with the top, left or right screen edges, in which case
-        # the ball should be repelled. If the ball cross the bottom screen edge, it
-        # should be destroyed (this case will not be checked here).
-        if collisionType is None:
-            screenRect = self.engine.boundaries
-            thisRect = self.boundaries
-            if thisRect.left <= screenRect.left:
-                self.speed.x = abs(self.speed.x)
-                collisionType = _COLLISION_BALL_WALL
-            elif thisRect.right >= screenRect.right:
-                self.speed.x = -abs(self.speed.x)
-                collisionType = _COLLISION_BALL_WALL
-            elif thisRect.top >= screenRect.top:
-                self.speed.y = -abs(self.speed.y)
-                collisionType = _COLLISION_BALL_WALL
-            
-        # Check if the ball collides with a block
-        if collisionType is None:
-            for block in self.engine.blocks:
-                collision = self.__processObjectCollision(block)
-                if collision:
-                    collisionType = _COLLISION_BALL_BLOCK
-                    self.engine.destroyBlock(block)
-                    break
+            return _CollisionType.PADDLE
+        return None
 
-        # Check if the ball collides with another ball
-        if collisionType is None:
-             for ball in self.engine.balls:
-                 if ball is not self:
-                     collision = self.__processObjectCollision(ball)
-                     if collision:
-                         collisionType = _COLLISION_BALL_BALL
-                         break
-                         
+    def __detectCollisionWithBlock(self):
+        for block in self.engine.blocks:
+            if self.__detectCollisionWithObject(block):
+                self.engine.destroyBlock(block)
+                return _CollisionType.BLOCK
 
-        # If a collision occurred, process it
+        return None
+
+    def __detectCollisionWithAnotherBall(self):
+        for ball in self.engine.balls:
+            if ball is not self:
+                if self.__detectCollisionWithObject(ball):
+                    return  _CollisionType.BALL
+
+        return None
+
+    def __detectCollisionWithWallEdges(self):
+        screenRectangle = self.engine.boundaries
+        thisRectangle = self.boundaries
+
+        if thisRectangle.left <= screenRectangle.left:
+            self.speed.x = abs(self.speed.x)
+            return _CollisionType.WALL
+        elif thisRectangle.right >= screenRectangle.right:
+            self.speed.x = -abs(self.speed.x)
+            return _CollisionType.WALL
+        elif thisRectangle.top >= screenRectangle.top:
+            self.speed.y = -abs(self.speed.y)
+            return _CollisionType.WALL
+
+        return None
+
+    def __playCollisionSound(self, collisionType):
         if collisionType is not None:
-            if collisionType == _COLLISION_BALL_WALL:
+            if collisionType == _CollisionType.WALL:
                 self.__soundCollisionBallWithWall.play()
-            if collisionType == _COLLISION_BALL_BLOCK:
+            if collisionType == _CollisionType.BLOCK:
                 self.__soundCollisionBallWithBlock.play()
-            if collisionType == _COLLISION_BALL_PADDLE:
+            if collisionType == _CollisionType.PADDLE:
                 self.__soundCollisionBallWithPaddle.play()
-            if collisionType == _COLLISION_BALL_BALL:
+            if collisionType == _CollisionType.BALL:
                 self.__soundCollisionBallWithBall.play()
-            return True
-        else:
-            return False
 
-    def __processObjectCollision(self, obj):
+    def __detectCollisionWithObject(self, obj):
         if obj is None:
             return False
         if obj == self:
@@ -167,16 +190,6 @@ class Ball(AbstractMovableGameObject):
             
         return collision
 
-    def display(self, milliseconds, tick):
-        colorTone = 0.1 * (tick % 10)
-        if colorTone > 1:
-            colorTone = 1
-
-        x = self.position.x
-        y = self.position.y
-
-        color = (colorTone, 0, 1 - colorTone)
-        Drawing.drawCircle2d(x, y, self.radius, color)
 
     def __str__(self):
         return "Ball {Position: " + str(self.position) + ", Speed: " + str(self.speed) + "}"
