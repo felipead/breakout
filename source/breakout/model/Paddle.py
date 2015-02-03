@@ -1,19 +1,21 @@
-from OpenGL.GL import *
-
 from breakout.model.AbstractMovableGameObject import AbstractMovableGameObject
 from breakout.geometry.Rectangle import Rectangle
+from breakout.model.Color import Color
+from breakout.util.Drawing import Drawing
 
 _PADDLE_HEIGHT = 5.0
 
-_PADDLE_VERTICAL_BORDER = 1
-_PADDLE_HORIZONTAL_BORDER = 2
+_PADDLE_VERTICAL_BORDER = 0.5
+_PADDLE_HORIZONTAL_BORDER = 1
+_PADDLE_COLOR = Color.RED
 
 class Paddle(AbstractMovableGameObject):
 
-    def __init__(self, engine, position = None, speed = None, width = 40):
+    def __init__(self, engine, position=None, speed=None, width=40, color=Color.RED):
         AbstractMovableGameObject.__init__(self, engine, position, speed)
         self._width = width
         self._height = _PADDLE_HEIGHT
+        self._color = Color.RED
 
     @property
     def width(self):
@@ -46,37 +48,35 @@ class Paddle(AbstractMovableGameObject):
             self.speed.x = 0
 
     def display(self, milliseconds, tick):
-        colorTone = 0.1 * (tick % 10)
-        if colorTone > 1:
-            colorTone = 1
+        brightness = 0.1 * (tick % 10)
+        if brightness > 1:
+            brightness = 1
 
         x = self.position.x
         y = self.position.y
         dy = self._height/2 - _PADDLE_VERTICAL_BORDER
         dx = self._width/2 - _PADDLE_HORIZONTAL_BORDER
 
-        self.__drawOuterRectangle(colorTone, x, y, dx, dy, _PADDLE_HORIZONTAL_BORDER, _PADDLE_VERTICAL_BORDER)
-        self.__drawInnerRectangle(colorTone, x, y, dx, dy)
+        self.__drawOuterRectangle(brightness, x, y, dx, dy, _PADDLE_HORIZONTAL_BORDER, _PADDLE_VERTICAL_BORDER)
+        self.__drawInnerRectangle(self._color, brightness, x, y, dx, dy)
 
     @staticmethod
-    def __drawOuterRectangle(colorTone, x, y, dx, dy, horizontalBorder, verticalBorder):
-        glBegin(GL_POLYGON)
-        glColor(1 - colorTone, 1 - colorTone, 1 - colorTone)
-        glVertex(x - (dx + horizontalBorder), y + (dy + verticalBorder))
-        glVertex(x + (dx + horizontalBorder), y + (dy + verticalBorder))
-        glVertex(x + (dx + horizontalBorder), y - (dy + verticalBorder))
-        glVertex(x - (dx + horizontalBorder), y - (dy + verticalBorder))
-        glEnd()
+    def __drawOuterRectangle(brightness, x, y, dx, dy, horizontalBorder, verticalBorder):
+        rgbColor = (1 - brightness, 1 - brightness, 1 - brightness)
+        a = (x - (dx + horizontalBorder), y + (dy + verticalBorder))
+        b = (x + (dx + horizontalBorder), y + (dy + verticalBorder))
+        c = (x + (dx + horizontalBorder), y - (dy + verticalBorder))
+        d = (x - (dx + horizontalBorder), y - (dy + verticalBorder))
+        Drawing.drawRectangle2d(a, b, c, d, rgbColor)
 
     @staticmethod
-    def __drawInnerRectangle(colorTone, x, y, dx, dy):
-        glBegin(GL_POLYGON)
-        glColor(colorTone, 0.0, 0.0)
-        glVertex(x - dx, y + dy)
-        glVertex(x + dx, y + dy)
-        glVertex(x + dx, y - dy)
-        glVertex(x - dx, y - dy)
-        glEnd()
+    def __drawInnerRectangle(color, brightness, x, y, dx, dy):
+        rgbColor = (color.value[0] * brightness, color.value[1] * brightness, color.value[2] * brightness)
+        a = (x - dx, y + dy)
+        b = (x + dx, y + dy)
+        c = (x + dx, y - dy)
+        d = (x - dx, y - dy)
+        Drawing.drawRectangle2d(a, b, c, d, rgbColor)
 
     def __str__(self):
         return "Paddle {Position: " + str(self.position) + ", Speed: " + str(self.speed) + "}"

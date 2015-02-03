@@ -19,7 +19,7 @@ _INFORMATION_BAR_FONT_SIZE = 14
 _INFORMATION_BAR_FOREGROUND_COLOR = (255, 255, 255)
 _INFORMATION_BAR_BACKGROUND_COLOR = (0, 0, 0)
 
-_VELOCITY_BAR_HEIGHT = 3.0
+_PADDLE_SPEED_BAR_HEIGHT = 3.0
 _PADDLE_MAX_SPEED = 0.75
 
 _MESSAGE_BOX_FONT_FILE = 'breakout/resources/fonts/pf_tempesta_five_extended.ttf'
@@ -32,7 +32,7 @@ class GameEngine:
 
     def __init__(self, canvasWidth, canvasHeight):
         self.__canvas = Rectangle(0, 0, canvasWidth, canvasHeight)
-        self.__boundaries = Rectangle(self.__canvas.left, self.__canvas.bottom + _VELOCITY_BAR_HEIGHT,
+        self.__boundaries = Rectangle(self.__canvas.left, self.__canvas.bottom + _PADDLE_SPEED_BAR_HEIGHT,
             self.__canvas.right, self.__canvas.top - _INFORMATION_BAR_HEIGHT)
 
         self.__informationBarFont = None
@@ -151,7 +151,7 @@ class GameEngine:
             raise Exception("Invalid operation. Did you forget to call initialize() first?")
         glClear(GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT)   # clear the screen
         self.__drawBackground(screen_height, screen_width)
-        self.__drawVelocityBar()
+        self.__drawPaddleSpeedBar()
         self.__drawInformationBar()
         self.__drawGameObjects(milliseconds, tick)
         self.__drawMessageBox()
@@ -203,21 +203,21 @@ class GameEngine:
         renderedStatusSize = renderedStatus.get_size()
         glDrawPixels(renderedStatusSize[0], renderedStatusSize[1], GL_RGBA, GL_UNSIGNED_BYTE, renderedStatusBytes)
 
-    def __drawVelocityBar(self):
+    def __drawPaddleSpeedBar(self):
         glColor(0, 0, 0)
         glBegin(GL_POLYGON)
         glVertex(self.__canvas.left, self.__canvas.bottom)
         glVertex(self.__canvas.right, self.__canvas.bottom)
-        glVertex(self.__canvas.right, self.__canvas.bottom + _VELOCITY_BAR_HEIGHT)
-        glVertex(self.__canvas.left, self.__canvas.bottom + _VELOCITY_BAR_HEIGHT)
+        glVertex(self.__canvas.right, self.__canvas.bottom + _PADDLE_SPEED_BAR_HEIGHT)
+        glVertex(self.__canvas.left, self.__canvas.bottom + _PADDLE_SPEED_BAR_HEIGHT)
         glEnd()
         half = (self.__canvas.right - self.__canvas.left) / 2
         paddleSpeed = self.__paddle.speed.x
         glBegin(GL_POLYGON)
         glColor(0.8, 0.8, 0)
         glVertex(half, self.__canvas.bottom)
-        glVertex(half, self.__canvas.bottom + _VELOCITY_BAR_HEIGHT)
-        glVertex(paddleSpeed * half / _PADDLE_MAX_SPEED + half, self.__canvas.bottom + _VELOCITY_BAR_HEIGHT)
+        glVertex(half, self.__canvas.bottom + _PADDLE_SPEED_BAR_HEIGHT)
+        glVertex(paddleSpeed * half / _PADDLE_MAX_SPEED + half, self.__canvas.bottom + _PADDLE_SPEED_BAR_HEIGHT)
         glVertex(paddleSpeed * half / _PADDLE_MAX_SPEED + half, self.__canvas.bottom)
         glEnd()
         glBegin(GL_LINES)

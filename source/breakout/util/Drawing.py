@@ -45,3 +45,15 @@ class Drawing:
             i += math.pi / float(numberOfEdges)
 
         glEnd()
+
+    @staticmethod
+    def drawRectangle2d(vertex1, vertex2, vertex3, vertex4, rgbColor=None):
+        if rgbColor is not None:
+            glColor(rgbColor[0], rgbColor[1], rgbColor[2])
+
+        glBegin(GL_POLYGON)
+        glVertex(vertex1[0], vertex1[1])
+        glVertex(vertex2[0], vertex2[1])
+        glVertex(vertex3[0], vertex3[1])
+        glVertex(vertex4[0], vertex4[1])
+        glEnd()
