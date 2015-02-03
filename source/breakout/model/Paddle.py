@@ -1,6 +1,6 @@
 from OpenGL.GL import *
 
-from breakout.domain.AbstractMovableGameObject import AbstractMovableGameObject
+from breakout.model.AbstractMovableGameObject import AbstractMovableGameObject
 from breakout.geometry.Rectangle import Rectangle
 
 _PADDLE_HEIGHT = 5.0

@@ -8,7 +8,7 @@ from pygame.constants import K_q, K_r, K_SPACE, K_p
 from breakout.util.MouseButton import MouseButton
 from breakout.game.GameState import GameState
 from breakout.game.LevelFactory import LevelFactory
-from breakout.domain.Paddle import Paddle
+from breakout.model.Paddle import Paddle
 from breakout.geometry.Vector import Vector
 from breakout.geometry.Rectangle import Rectangle
 

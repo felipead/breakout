@@ -1,7 +1,7 @@
 from OpenGL.GL import *
 
-from breakout.domain.AbstractGameObject import AbstractGameObject
-from breakout.domain.Color import Color
+from breakout.model.AbstractGameObject import AbstractGameObject
+from breakout.model.Color import Color
 from breakout.geometry.Rectangle import Rectangle
 
 

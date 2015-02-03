@@ -1,4 +1,4 @@
-from breakout.domain.AbstractGameObject import AbstractGameObject
+from breakout.model.AbstractGameObject import AbstractGameObject
 from breakout.geometry.Vector import Vector
 
 

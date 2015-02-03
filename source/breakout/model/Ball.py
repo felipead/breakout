@@ -3,7 +3,7 @@ from enum import IntEnum
 
 from pygame.mixer import Sound
 
-from breakout.domain.AbstractMovableGameObject import AbstractMovableGameObject
+from breakout.model.AbstractMovableGameObject import AbstractMovableGameObject
 from breakout.geometry.Rectangle import Rectangle
 from breakout.util.Drawing import *
 

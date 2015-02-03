@@ -1,12 +1,14 @@
 from pygame.mixer import Sound
-from breakout.domain.Color import Color
+
+from breakout.model.Color import Color
 
 from breakout.game.building.AbstractLevelBuilder import AbstractLevelBuilder
-from breakout.domain.Ball import Ball
-from breakout.domain.Block import Block
-from breakout.game.Level import Level
+from breakout.model.Ball import Ball
+from breakout.model.Block import Block
+from breakout.model.Level import Level
 from breakout.geometry.Vector import Vector
 from breakout.util.Drawing import Drawing
+
 
 _FILE_MUSIC_LEVEL1 = 'breakout/resources/sounds/ChemicalBurn.wav'
 _FILE_BACKGROUND_LEVEL1 = 'breakout/resources/graphics/Level1.png'
