@@ -6,7 +6,7 @@ from breakout.util.Drawing import Drawing
 _PADDLE_HEIGHT = 5.0
 
 _PADDLE_VERTICAL_BORDER = 0.5
-_PADDLE_HORIZONTAL_BORDER = 1
+_PADDLE_HORIZONTAL_BORDER = 0.5
 _PADDLE_COLOR = Color.RED
 
 class Paddle(AbstractMovableGameObject):
