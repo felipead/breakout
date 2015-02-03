@@ -2,13 +2,12 @@ from datetime import datetime
 
 from OpenGL.GL import *
 from OpenGL.GLUT import *
-
 import pygame
 from pygame.font import Font
 from pygame.constants import K_q, K_r
-from breakout.LevelFactory import LevelFactory
 
-from breakout.domain.Paddle import Paddle
+from breakout.game.level.LevelFactory import LevelFactory
+from breakout.game.domain.Paddle import Paddle
 from breakout.geometry.Vector import Vector
 from breakout.geometry.Rectangle import Rectangle
 
@@ -42,7 +41,7 @@ MOUSE_BUTTON_SCROLL_UP = 4
 MOUSE_BUTTON_SCROLL_DOWN = 5
 
 
-class GameEngine:
+class Engine:
 
     def __init__(self, canvasWidth, canvasHeight):
         self.__canvas = Rectangle(0, 0, canvasWidth, canvasHeight)

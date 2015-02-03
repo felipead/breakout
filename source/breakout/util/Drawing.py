@@ -3,7 +3,7 @@ import math
 
 import pygame
 
-class DrawingUtil:
+class Drawing:
 
     @staticmethod
     def loadTexture(filename, use_alpha=False):
