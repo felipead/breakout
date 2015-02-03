@@ -3,25 +3,17 @@ from breakout.geometry.Rectangle import Rectangle
 from breakout.util.Drawing import Drawing
 
 
-_BLOCK_POINTS_BLUE = 10
-_BLOCK_POINTS_GREEN = 20
-_BLOCK_POINTS_RED = 30
-
-_DEFAULT_HEIGHT = 10
-_DEFAULT_WIDTH = 20
-
 _VERTICAL_BORDER = 0.5
 _HORIZONTAL_BORDER = 0.5
 
 
-
 class Block(AbstractGameObject):
 
-    def __init__(self, engine, position, type, width=_DEFAULT_WIDTH, height=_DEFAULT_HEIGHT):
+    def __init__(self, engine, position, blockColor, width, height):
         AbstractGameObject.__init__(self, engine, position)
         self._width = width
         self._height = height
-        self._type = type
+        self._blockColor = blockColor
 
     @property
     def width(self):
@@ -33,11 +25,11 @@ class Block(AbstractGameObject):
 
     @property
     def color(self):
-        return self._type.value.color
+        return self._blockColor.value.color
 
     @property
     def points(self):
-        return self._type.value.points
+        return self._blockColor.value.points
 
     @property
     def boundaries(self):
@@ -74,4 +66,4 @@ class Block(AbstractGameObject):
         Drawing.drawRectangle2d(x, y, dx - _HORIZONTAL_BORDER, dy - _VERTICAL_BORDER, innerColor)
 
     def __str__(self):
-        return "Block {Type: " + str(self._type) + ", Position: " + str(self.position) + "}"
+        return "Block {Color: " + str(self._blockColor) + ", Position: " + str(self.position) + "}"
