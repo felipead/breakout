@@ -48,7 +48,7 @@ class Ball(AbstractMovableGameObject):
         # destroyed, and the game status updated)
         screenRect = self.engine.boundaries
         thisRect = self.boundaries
-        if thisRect.bottom < (screenRect.bottom):
+        if thisRect.bottom < screenRect.bottom:
             self.__soundBallDestroyed.play()
             self.engine.destroyBall(self)
 
@@ -64,7 +64,7 @@ class Ball(AbstractMovableGameObject):
         # Check if the ball collides with the top, left or right screen edges, in which case
         # the ball should be repelled. If the ball cross the bottom screen edge, it
         # should be destroyed (this case will not be checked here).
-        if collisionType == None:
+        if collisionType is None:
             screenRect = self.engine.boundaries
             thisRect = self.boundaries
             if thisRect.left <= screenRect.left:
@@ -78,7 +78,7 @@ class Ball(AbstractMovableGameObject):
                 collisionType = _COLLISION_BALL_WALL
             
         # Check if the ball collides with a block
-        if collisionType == None:
+        if collisionType is None:
             for block in self.engine.blocks:
                 collision = self.__processObjectCollision(block)
                 if collision:
@@ -87,7 +87,7 @@ class Ball(AbstractMovableGameObject):
                     break
 
         # Check if the ball collides with another ball
-        if collisionType == None:
+        if collisionType is None:
              for ball in self.engine.balls:
                  if ball is not self:
                      collision = self.__processObjectCollision(ball)
@@ -97,7 +97,7 @@ class Ball(AbstractMovableGameObject):
                          
 
         # If a collision occurred, process it
-        if collisionType != None:
+        if collisionType is not None:
             if collisionType == _COLLISION_BALL_WALL:
                 self.__soundCollisionBallWithWall.play()
             if collisionType == _COLLISION_BALL_BLOCK:
@@ -111,7 +111,7 @@ class Ball(AbstractMovableGameObject):
             return False
 
     def __processObjectCollision(self, obj):
-        if obj == None:
+        if obj is None:
             return False
         if obj == self:
             return False

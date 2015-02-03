@@ -58,7 +58,8 @@ class Paddle(AbstractMovableGameObject):
         self.__drawOuterRectangle(colorTone, x, y, dx, dy, _PADDLE_HORIZONTAL_BORDER, _PADDLE_VERTICAL_BORDER)
         self.__drawInnerRectangle(colorTone, x, y, dx, dy)
 
-    def __drawOuterRectangle(self, colorTone, x, y, dx, dy, horizontalBorder, verticalBorder):
+    @staticmethod
+    def __drawOuterRectangle(colorTone, x, y, dx, dy, horizontalBorder, verticalBorder):
         glBegin(GL_POLYGON)
         glColor(1 - colorTone, 1 - colorTone, 1 - colorTone)
         glVertex(x - (dx + horizontalBorder), y + (dy + verticalBorder))
@@ -67,7 +68,8 @@ class Paddle(AbstractMovableGameObject):
         glVertex(x - (dx + horizontalBorder), y - (dy + verticalBorder))
         glEnd()
 
-    def __drawInnerRectangle(self, colorTone, x, y, dx, dy):
+    @staticmethod
+    def __drawInnerRectangle(colorTone, x, y, dx, dy):
         glBegin(GL_POLYGON)
         glColor(colorTone, 0.0, 0.0)
         glVertex(x - dx, y + dy)

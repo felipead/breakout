@@ -8,17 +8,17 @@ class Drawing:
     @staticmethod
     def loadTexture(filename, use_alpha=False):
         if use_alpha:
-            format, gl_format, bits_per_pixel = 'RGBA', GL_RGBA, 4
+            imageFormat, openGlFormat, bitsPerPixel = 'RGBA', GL_RGBA, 4
         else:
-            format, gl_format, bits_per_pixel = 'RGB', GL_RGB, 3
+            imageFormat, openGlFormat, bitsPerPixel = 'RGB', GL_RGB, 3
 
         # Load texture and extract the raw data
-        img_surface = pygame.image.load(filename)
-        data = pygame.image.tostring(img_surface, format, True)
+        imageSurface = pygame.image.load(filename)
+        data = pygame.image.tostring(imageSurface, imageFormat, True)
 
         # Generate and bind a texture id
-        texture_id = glGenTextures(1)
-        glBindTexture(GL_TEXTURE_2D, texture_id)
+        textureId = glGenTextures(1)
+        glBindTexture(GL_TEXTURE_2D, textureId)
 
         # Set texture parameters and alignment
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
@@ -26,17 +26,11 @@ class Drawing:
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1)
 
         # Upload texture data
-        width, height = img_surface.get_rect().size
-        glTexImage2D(GL_TEXTURE_2D,
-            0,
-            bits_per_pixel,
-            width, height,
-            0,
-            gl_format,
-            GL_UNSIGNED_BYTE, data)
+        width, height = imageSurface.get_rect().size
+        glTexImage2D(GL_TEXTURE_2D, 0, bitsPerPixel, width, height, 0, openGlFormat, GL_UNSIGNED_BYTE, data)
 
         # Return the texture id, so we can use glBindTexture
-        return texture_id
+        return textureId
 
     @staticmethod
     def drawCircle2d(x, y, radius, color=None, numberOfEdges=16):

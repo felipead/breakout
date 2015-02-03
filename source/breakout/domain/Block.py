@@ -57,9 +57,10 @@ class Block(AbstractGameObject):
         dx = self.width/2.0 - horizontalBorder
 
         self.__drawOuterRectangle(colorBrightness, x, y, dx, dy, horizontalBorder, verticalBorder)
-        self.__drawInnerRectangle(colorBrightness, x, y, dx, dy)
+        self.__drawInnerRectangle(self.color, colorBrightness, x, y, dx, dy)
 
-    def __drawOuterRectangle(self, colorBrightness, x, y, dx, dy, horizontalBorder, verticalBorder):
+    @staticmethod
+    def __drawOuterRectangle(colorBrightness, x, y, dx, dy, horizontalBorder, verticalBorder):
         glColor(1 - colorBrightness, 1 - colorBrightness, 1 - colorBrightness)
         glBegin(GL_POLYGON)
         glVertex(x - (dx + horizontalBorder), y + (dy + verticalBorder))
@@ -68,8 +69,9 @@ class Block(AbstractGameObject):
         glVertex(x - (dx + horizontalBorder), y - (dy + verticalBorder))
         glEnd()
 
-    def __drawInnerRectangle(self, colorBrightness, x, y, dx, dy):
-        rgb = self.color.value
+    @staticmethod
+    def __drawInnerRectangle(color, colorBrightness, x, y, dx, dy):
+        rgb = color.value
         glColor(rgb[0] * colorBrightness, rgb[1] * colorBrightness, rgb[2] * colorBrightness)
 
         glBegin(GL_POLYGON)

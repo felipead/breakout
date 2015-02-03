@@ -34,8 +34,8 @@ class Level1Builder(AbstractLevelBuilder):
     def __buildBlocks(self):
         boundaries = self._engine.boundaries
 
-        columns = (int)(boundaries.width // _BLOCK_WIDTH)
-        rows = (int)(boundaries.height // _BLOCK_HEIGHT)
+        columns = int(boundaries.width // _BLOCK_WIDTH)
+        rows = int(boundaries.height // _BLOCK_HEIGHT)
         blocks = []
 
         for i in xrange(3, columns - 1):
@@ -69,7 +69,8 @@ class Level1Builder(AbstractLevelBuilder):
 
         return [ball1, ball2, ball3]
 
-    def __chooseColor(self, index):
+    @staticmethod
+    def __chooseColor(index):
         if index == 1:
             return Color.RED
         elif index == 2:
