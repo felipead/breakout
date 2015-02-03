@@ -47,7 +47,15 @@ class Drawing:
         glEnd()
 
     @staticmethod
-    def drawRectangle2d(vertex1, vertex2, vertex3, vertex4, rgbColor=None):
+    def drawRectangle2d(x, y, dx, dy, rgbColor):
+        vertex1 = (x - dx, y + dy)
+        vertex2 = (x + dx, y + dy)
+        vertex3 = (x + dx, y - dy)
+        vertex4 = (x - dx, y - dy)
+        Drawing.drawQuadrilateral2d(vertex1, vertex2, vertex3, vertex4, rgbColor)
+
+    @staticmethod
+    def drawQuadrilateral2d(vertex1, vertex2, vertex3, vertex4, rgbColor=None):
         if rgbColor is not None:
             glColor(rgbColor[0], rgbColor[1], rgbColor[2])
 

@@ -3,19 +3,19 @@ from breakout.geometry.Rectangle import Rectangle
 from breakout.model.Color import Color
 from breakout.util.Drawing import Drawing
 
-_PADDLE_HEIGHT = 5.0
-
-_PADDLE_VERTICAL_BORDER = 0.5
-_PADDLE_HORIZONTAL_BORDER = 0.5
-_PADDLE_COLOR = Color.RED
+_HEIGHT = 5.0
+_VERTICAL_BORDER = 0
+_HORIZONTAL_BORDER = 2
+_INNER_COLOR = Color.RED
+_OUTER_COLOR = Color.GRAY
+_COLOR_TONE_FREQUENCY = 25
 
 class Paddle(AbstractMovableGameObject):
 
-    def __init__(self, engine, position=None, speed=None, width=40, color=Color.RED):
+    def __init__(self, engine, position=None, speed=None, width=40):
         AbstractMovableGameObject.__init__(self, engine, position, speed)
         self._width = width
-        self._height = _PADDLE_HEIGHT
-        self._color = Color.RED
+        self._height = _HEIGHT
 
     @property
     def width(self):
@@ -48,35 +48,27 @@ class Paddle(AbstractMovableGameObject):
             self.speed.x = 0
 
     def display(self, milliseconds, tick):
-        brightness = 0.1 * (tick % 10)
-        if brightness > 1:
-            brightness = 1
+        colorTone = float(tick % _COLOR_TONE_FREQUENCY)/_COLOR_TONE_FREQUENCY
+        if colorTone > 1:
+            colorTone = 1
 
         x = self.position.x
         y = self.position.y
-        dy = self._height/2 - _PADDLE_VERTICAL_BORDER
-        dx = self._width/2 - _PADDLE_HORIZONTAL_BORDER
+        dy = float(self._height)/2
+        dx = float(self._width)/2
 
-        self.__drawOuterRectangle(brightness, x, y, dx, dy, _PADDLE_HORIZONTAL_BORDER, _PADDLE_VERTICAL_BORDER)
-        self.__drawInnerRectangle(self._color, brightness, x, y, dx, dy)
+        self.__drawOuterRectangle(colorTone, x, y, dx, dy)
+        self.__drawInnerRectangle(colorTone, x, y, dx, dy)
 
-    @staticmethod
-    def __drawOuterRectangle(brightness, x, y, dx, dy, horizontalBorder, verticalBorder):
-        rgbColor = (1 - brightness, 1 - brightness, 1 - brightness)
-        a = (x - (dx + horizontalBorder), y + (dy + verticalBorder))
-        b = (x + (dx + horizontalBorder), y + (dy + verticalBorder))
-        c = (x + (dx + horizontalBorder), y - (dy + verticalBorder))
-        d = (x - (dx + horizontalBorder), y - (dy + verticalBorder))
-        Drawing.drawRectangle2d(a, b, c, d, rgbColor)
+    def __drawOuterRectangle(self, colorTone, x, y, dx, dy):
+        rgb = _OUTER_COLOR.value
+        outerColor = (rgb[0] * (1 - colorTone), rgb[1] * (1 - colorTone), rgb[2] * (1 - colorTone))
+        Drawing.drawRectangle2d(x, y, dx, dy, outerColor)
 
-    @staticmethod
-    def __drawInnerRectangle(color, brightness, x, y, dx, dy):
-        rgbColor = (color.value[0] * brightness, color.value[1] * brightness, color.value[2] * brightness)
-        a = (x - dx, y + dy)
-        b = (x + dx, y + dy)
-        c = (x + dx, y - dy)
-        d = (x - dx, y - dy)
-        Drawing.drawRectangle2d(a, b, c, d, rgbColor)
+    def __drawInnerRectangle(self, colorTone, x, y, dx, dy):
+        rgb = _INNER_COLOR.value
+        innerColor = (rgb[0] * colorTone, rgb[1] * colorTone, rgb[2] * colorTone)
+        Drawing.drawRectangle2d(x, y, dx - _HORIZONTAL_BORDER, dy - _VERTICAL_BORDER, innerColor)
 
     def __str__(self):
         return "Paddle {Position: " + str(self.position) + ", Speed: " + str(self.speed) + "}"

@@ -1,6 +1,5 @@
 from pygame.mixer import Sound
-
-from breakout.model.Color import Color
+from breakout.model.BlockType import BlockType
 
 from breakout.game.building.AbstractLevelBuilder import AbstractLevelBuilder
 from breakout.model.Ball import Ball
@@ -42,16 +41,16 @@ class Level1Builder(AbstractLevelBuilder):
 
         for i in xrange(3, columns - 1):
             for j in xrange(15, rows - 3):
-                color = self.__chooseColor(j % 3 + 1)
+                blockType = self.__chooseBlockType(j % 4)
                 position = Vector((boundaries.left + i * _BLOCK_WIDTH, boundaries.bottom + j * _BLOCK_HEIGHT))
-                block = Block(self._engine, position, color=color, width=_BLOCK_WIDTH, height=_BLOCK_HEIGHT)
+                block = Block(self._engine, position, blockType, width=_BLOCK_WIDTH, height=_BLOCK_HEIGHT)
                 blocks.append(block)
 
         for i in xrange(3, columns - 1):
-            color = self.__chooseColor(i % 3 + 1)
+            blockType = self.__chooseBlockType(i % 4)
             j = 10
             position = Vector((boundaries.left + i * _BLOCK_WIDTH, boundaries.bottom + j * _BLOCK_HEIGHT))
-            block = Block(self._engine, position, color=color, width=_BLOCK_WIDTH, height=_BLOCK_HEIGHT)
+            block = Block(self._engine, position, blockType, width=_BLOCK_WIDTH, height=_BLOCK_HEIGHT)
             blocks.append(block)
 
         return blocks
@@ -72,10 +71,12 @@ class Level1Builder(AbstractLevelBuilder):
         return [ball1, ball2, ball3]
 
     @staticmethod
-    def __chooseColor(index):
-        if index == 1:
-            return Color.RED
+    def __chooseBlockType(index):
+        if index == 0:
+            return BlockType.RED
+        elif index == 1:
+            return BlockType.GREEN
         elif index == 2:
-            return Color.GREEN
+            return BlockType.BLUE
         elif index == 3:
-            return Color.BLUE
+            return BlockType.PURPLE

@@ -1,5 +1,4 @@
 from breakout.model.AbstractGameObject import AbstractGameObject
-from breakout.model.Color import Color
 from breakout.geometry.Rectangle import Rectangle
 from breakout.util.Drawing import Drawing
 
@@ -8,20 +7,21 @@ _BLOCK_POINTS_BLUE = 10
 _BLOCK_POINTS_GREEN = 20
 _BLOCK_POINTS_RED = 30
 
-_DEFAULT_BLOCK_HEIGHT = 10
-_DEFAULT_BLOCK_WIDTH = 20
+_DEFAULT_HEIGHT = 10
+_DEFAULT_WIDTH = 20
 
-_BLOCK_VERTICAL_BORDER = 0.5
-_BLOCK_HORIZONTAL_BORDER = 0.5
+_VERTICAL_BORDER = 0.5
+_HORIZONTAL_BORDER = 0.5
+
 
 
 class Block(AbstractGameObject):
 
-    def __init__(self, engine, position, color, width=_DEFAULT_BLOCK_WIDTH, height=_DEFAULT_BLOCK_HEIGHT):
+    def __init__(self, engine, position, type, width=_DEFAULT_WIDTH, height=_DEFAULT_HEIGHT):
         AbstractGameObject.__init__(self, engine, position)
         self._width = width
         self._height = height
-        self._color = color
+        self._type = type
 
     @property
     def width(self):
@@ -32,15 +32,12 @@ class Block(AbstractGameObject):
         return self._height
 
     @property
+    def color(self):
+        return self._type.value.color
+
+    @property
     def points(self):
-        if self._color == Color.BLUE:
-            return _BLOCK_POINTS_BLUE
-        elif self._color == Color.GREEN:
-            return _BLOCK_POINTS_GREEN
-        elif self._color == Color.RED:
-            return _BLOCK_POINTS_RED
-        else:
-            raise Exception("Color not supported: " + self._color)
+        return self._type.value.points
 
     @property
     def boundaries(self):
@@ -54,35 +51,27 @@ class Block(AbstractGameObject):
         pass
 
     def display(self, milliseconds, tick):
-        brightness = 0.1 * (tick % 10)
-        if brightness > 1:
-            brightness = 1
+        colorTone = (tick % 10)/float(10)
+        if colorTone > 1:
+            colorTone = 1
 
         x = self.position.x
         y = self.position.y
-        dy = self.height/2.0 - _BLOCK_VERTICAL_BORDER
-        dx = self.width/2.0 - _BLOCK_HORIZONTAL_BORDER
+        dy = self.height/2.0
+        dx = self.width/2.0
 
-        self.__drawOuterRectangle(brightness, x, y, dx, dy, _BLOCK_HORIZONTAL_BORDER, _BLOCK_VERTICAL_BORDER)
-        self.__drawInnerRectangle(self._color, brightness, x, y, dx, dy)
+        self.__drawOuterRectangle(x, y, dx, dy, colorTone)
+        self.__drawInnerRectangle(x, y, dx, dy, colorTone)
 
-    @staticmethod
-    def __drawOuterRectangle(brightness, x, y, dx, dy, horizontalBorder, verticalBorder):
-        color = (1 - brightness, 1 - brightness, 1 - brightness)
-        a = (x - (dx + horizontalBorder), y + (dy + verticalBorder))
-        b = (x + (dx + horizontalBorder), y + (dy + verticalBorder))
-        c = (x + (dx + horizontalBorder), y - (dy + verticalBorder))
-        d = (x - (dx + horizontalBorder), y - (dy + verticalBorder))
-        Drawing.drawRectangle2d(a, b, c, d, color)
+    def __drawOuterRectangle(self, x, y, dx, dy, colorTone):
+        rgb = self.color.value
+        outerColor = (rgb[0] * (1 - colorTone), rgb[1] * (1 - colorTone), rgb[2] * (1 - colorTone))
+        Drawing.drawRectangle2d(x, y, dx, dy, outerColor)
 
-    @staticmethod
-    def __drawInnerRectangle(color, brightness, x, y, dx, dy):
-        brightenedColor = (color.value[0] * brightness, color.value[1] * brightness, color.value[2] * brightness)
-        a = (x - dx, y + dy)
-        b = (x + dx, y + dy)
-        c = (x + dx, y - dy)
-        d = (x - dx, y - dy)
-        Drawing.drawRectangle2d(a, b, c, d, brightenedColor)
+    def __drawInnerRectangle(self, x, y, dx, dy, colorTone):
+        rgb = self.color.value
+        innerColor = (rgb[0] * colorTone, rgb[1] * colorTone, rgb[2] * colorTone)
+        Drawing.drawRectangle2d(x, y, dx - _HORIZONTAL_BORDER, dy - _VERTICAL_BORDER, innerColor)
 
     def __str__(self):
-        return "Block {Color: " + str(self._color) + ", Position: " + str(self.position) + ", Points: " + str(self.points) + "}"
+        return "Block {Type: " + str(self._type) + ", Position: " + str(self.position) + "}"

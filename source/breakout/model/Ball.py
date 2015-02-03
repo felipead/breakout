@@ -14,6 +14,8 @@ _SOUND_FILE_COLLISION_BALL_WITH_BLOCK = 'breakout/resources/sounds/Tuntz.wav'
 _SOUND_FILE_COLLISION_BALL_WITH_PADDLE = 'breakout/resources/sounds/Ping.wav'
 _SOUND_FILE_BALL_DESTROYED = 'breakout/resources/sounds/Basso.wav'
 
+_COLOR_TONE_FREQUENCY = 25
+
 
 class _CollisionType(IntEnum):
     WALL = 1
@@ -41,18 +43,15 @@ class Ball(AbstractMovableGameObject):
         top = self.position.y + self.radius
         return Rectangle(left, bottom, right, top)
 
-
     def display(self, milliseconds, tick):
-        colorTone = 0.1 * (tick % 10)
+        colorTone = float(tick % _COLOR_TONE_FREQUENCY)/_COLOR_TONE_FREQUENCY
         if colorTone > 1:
             colorTone = 1
+        color = (colorTone, 1 - colorTone, 1 - colorTone)
 
         x = self.position.x
         y = self.position.y
-
-        color = (colorTone, 0, 1 - colorTone)
         Drawing.drawCircle2d(x, y, self.radius, color)
-
 
     def update(self, milliseconds, tick):
         self.position.x += self.speed.x * milliseconds
