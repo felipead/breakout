@@ -1,7 +1,7 @@
 from OpenGL.GL import *
 import math
-
 import pygame
+
 
 class Drawing:
 

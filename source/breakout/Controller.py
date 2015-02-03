@@ -18,18 +18,18 @@ _DEFAULT_SCREEN_HEIGHT = 600
 class Controller:
 
     def __init__(self):
-        self._engine = Engine(_CANVAS_WIDTH, _CANVAS_HEIGHT)
-        self._screenWidth = _DEFAULT_SCREEN_WIDTH
-        self._screenHeight = _DEFAULT_SCREEN_HEIGHT
+        self.__engine = Engine(_CANVAS_WIDTH, _CANVAS_HEIGHT)
+        self.__screenWidth = _DEFAULT_SCREEN_WIDTH
+        self.__screenHeight = _DEFAULT_SCREEN_HEIGHT
 
     def run(self):
-        self._initialize()
-        self._gameLoop()
+        self.__initialize()
+        self.__gameLoop()
 
-    def _initialize(self):
+    def __initialize(self):
         pygame.init()
         pygame.mouse.set_visible(_MOUSE_VISIBLE)
-        pygame.display.set_mode((self._screenWidth, self._screenHeight), OPENGL | DOUBLEBUF)
+        pygame.display.set_mode((self.__screenWidth, self.__screenHeight), OPENGL | DOUBLEBUF)
 
         glClearColor(0.0, 0.0, 0.0, 1.0)
         glShadeModel(GL_FLAT)
@@ -37,80 +37,77 @@ class Controller:
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
         glBlendEquation(GL_FUNC_ADD)
 
-        self._handleScreenResizeEvent(self._screenWidth, self._screenHeight)
-        self._engine.initialize()
+        self.__handleScreenResizeEvent(self.__screenWidth, self.__screenHeight)
+        self.__engine.initialize()
 
-
-    def _gameLoop(self):
+    def __gameLoop(self):
         clock = pygame.time.Clock()
         ticks = 0
         while True:
             for event in pygame.event.get():
-                self._handleInputEvent(event)
+                self.__handleInputEvent(event)
 
             milliseconds = clock.tick(_FRAMES_PER_SECOND)
             ticks += 1
 
-            self._engine.update(milliseconds, ticks)
-            self._engine.display(milliseconds, ticks, self._screenWidth, self._screenHeight)
+            self.__engine.update(milliseconds, ticks)
+            self.__engine.display(milliseconds, ticks, self.__screenWidth, self.__screenHeight)
 
             pygame.display.flip()  # swap buffers
 
-
-    def _handleInputEvent(self, event):
+    def __handleInputEvent(self, event):
         if event.type == QUIT:
             exit()
         elif event.type == VIDEORESIZE:
-            self._handleScreenResizeEvent(event.w, event.h)
+            self.__handleScreenResizeEvent(event.w, event.h)
         elif event.type == MOUSEMOTION:
-            self._handleMouseMoveEvent(event.pos, event.rel, event.buttons)
+            self.__handleMouseMoveEvent(event.pos, event.rel, event.buttons)
         elif event.type == MOUSEBUTTONUP:
-            self._handleMouseButtonUpEvent(event.button, event.pos)
+            self.__handleMouseButtonUpEvent(event.button, event.pos)
         elif event.type == MOUSEBUTTONDOWN:
-            self._handleMouseButtonDownEvent(event.button, event.pos)
+            self.__handleMouseButtonDownEvent(event.button, event.pos)
         elif event.type == KEYUP:
-            self._handleKeyUpEvent(event.key, event.mod)
+            self.__handleKeyUpEvent(event.key, event.mod)
         elif event.type == KEYDOWN:
-            self._handleKeyDownEvent(event.key, event.mod, event.unicode)
+            self.__handleKeyDownEvent(event.key, event.mod, event.unicode)
 
-
-    def _handleScreenResizeEvent(self, width, height):
-        self._screenWidth = width
-        self._screenHeight = height
+    def __handleScreenResizeEvent(self, width, height):
+        self.__screenWidth = width
+        self.__screenHeight = height
 
         glViewport(0, 0, width, height)
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()
-        gluOrtho2D(self._engine.canvas.left, self._engine.canvas.right,
-                   self._engine.canvas.bottom, self._engine.canvas.top)
+        gluOrtho2D(self.__engine.canvas.left, self.__engine.canvas.right,
+                   self.__engine.canvas.bottom, self.__engine.canvas.top)
         glMatrixMode(GL_MODELVIEW)
         glLoadIdentity()
 
-    def _handleMouseButtonUpEvent(self, button, coordinates):
-        mappedCoordinates = self._mapScreenCoordinatesToCanvas(coordinates)
-        self._engine.handleMouseButtonUpEvent(button, mappedCoordinates)
+    def __handleMouseButtonUpEvent(self, button, coordinates):
+        mappedCoordinates = self.__mapScreenCoordinatesToCanvas(coordinates)
+        self.__engine.handleMouseButtonUpEvent(button, mappedCoordinates)
 
-    def _handleMouseButtonDownEvent(self, button, coordinates):
-        mappedCoordinates = self._mapScreenCoordinatesToCanvas(coordinates)
-        self._engine.handleMouseButtonDownEvent(button, mappedCoordinates)
+    def __handleMouseButtonDownEvent(self, button, coordinates):
+        mappedCoordinates = self.__mapScreenCoordinatesToCanvas(coordinates)
+        self.__engine.handleMouseButtonDownEvent(button, mappedCoordinates)
 
-    def _handleMouseMoveEvent(self, absolute_coordinates, relative_coordinates, buttons):
-        mapped_absolute_coordinates = self._mapScreenCoordinatesToCanvas(absolute_coordinates)
-        self._engine.handleMouseMoveEvent(mapped_absolute_coordinates, relative_coordinates, buttons)
+    def __handleMouseMoveEvent(self, absolute_coordinates, relative_coordinates, buttons):
+        mapped_absolute_coordinates = self.__mapScreenCoordinatesToCanvas(absolute_coordinates)
+        self.__engine.handleMouseMoveEvent(mapped_absolute_coordinates, relative_coordinates, buttons)
 
-    def _handleKeyUpEvent(self, key, modifiers):
-        self._engine.handleKeyUpEvent(key, modifiers)
+    def __handleKeyUpEvent(self, key, modifiers):
+        self.__engine.handleKeyUpEvent(key, modifiers)
 
-    def _handleKeyDownEvent(self, key, modifiers, char):
-        self._engine.handleKeyDownEvent(key, modifiers, char)
+    def __handleKeyDownEvent(self, key, modifiers, char):
+        self.__engine.handleKeyDownEvent(key, modifiers, char)
 
-    def _mapScreenCoordinatesToCanvas(self, coordinates):
-        horizontalCanvasToScreenRatio = self._engine.canvas.width / float(self._screenWidth)
-        verticalCanvasToScreenRatio = self._engine.canvas.height / float(self._screenHeight)
+    def __mapScreenCoordinatesToCanvas(self, coordinates):
+        horizontalCanvasToScreenRatio = self.__engine.canvas.width / float(self.__screenWidth)
+        verticalCanvasToScreenRatio = self.__engine.canvas.height / float(self.__screenHeight)
 
         (x, y) = coordinates
         x *= horizontalCanvasToScreenRatio
         y *= verticalCanvasToScreenRatio
 
-        y = self._engine.canvas.top - y
+        y = self.__engine.canvas.top - y
         return x, y

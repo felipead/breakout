@@ -7,7 +7,6 @@ from breakout.domain.Level import Level
 from breakout.geometry.Vector import Vector
 from breakout.util.Drawing import Drawing
 
-
 _FILE_MUSIC_LEVEL1 = 'breakout/resources/sounds/ChemicalBurn.wav'
 _FILE_BACKGROUND_LEVEL1 = 'breakout/resources/graphics/Level1.png'
 
