@@ -120,17 +120,18 @@ class GameEngine:
         if self.__state is None:
             raise Exception("Invalid operation. Did you forget to call initialize() first?")
 
-        self.__updateState()
-        if self.__state == GameState.PLAY:
+        if self.__state == GameState.PLAY or self.__state == GameState.HALT_RUN_CYCLE:
             self.__updateGameObjects(milliseconds, tick)
 
+        self.__updateState()
+
     def __updateState(self):
+        if self.__state == GameState.HALT_RUN_CYCLE:
+            self.__state = GameState.HALT
         if len(self.__balls) == 0:
             self.__state = GameState.LOST
         elif len(self.__blocks) == 0:
             self.__state = GameState.WON
-        if self.__state == GameState.HALT_RUN_CYCLE:
-            self.__state = GameState.HALT
 
     def __updateGameObjects(self, milliseconds, tick):
         if (self.__state == GameState.PLAY) or (self.__state == GameState.HALT_RUN_CYCLE):
