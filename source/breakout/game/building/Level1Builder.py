@@ -30,7 +30,7 @@ class Level1Builder(AbstractLevelBuilder):
         return level
 
     def __buildBlocks(self):
-        boundaries = self._engine.boundaries
+        boundaries = self._engine.rectangle
         blockHeight = boundaries.height / float(_BLOCK_ROWS)
         blockWidth = boundaries.width / float(_BLOCK_COLUMNS)
 
@@ -40,17 +40,17 @@ class Level1Builder(AbstractLevelBuilder):
             blockColor = BlockColor.selectInRainbowOrder(blockColorIndex)
             blockColorIndex += 1
             for i in xrange(3, _BLOCK_COLUMNS - 2):
-                position = Vector((boundaries.left + i * blockWidth, boundaries.bottom + j * blockHeight))
-                block = Block(self._engine, position, blockColor, width=blockWidth, height=blockHeight)
+                block = Block(self._engine, blockColor, width=blockWidth, height=blockHeight)
+                block.position = Vector((boundaries.left + i * blockWidth, boundaries.bottom + j * blockHeight))
                 blocks.append(block)
 
         return blocks
 
     def __buildBalls(self):
-        boundaries = self._engine.boundaries
+        boundaries = self._engine.rectangle
 
         ball1 = Ball(self._engine)
-        ball1.position = Vector((boundaries.width / 2, boundaries.top - ball1.radius))
+        ball1.position = Vector((boundaries.width/2.0, boundaries.top - ball1.radius))
         ball1.speed = Vector((-_BALL_SPEED, _BALL_SPEED))
 
         ball2 = Ball(self._engine)

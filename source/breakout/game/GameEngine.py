@@ -32,7 +32,7 @@ class GameEngine:
 
     def __init__(self, canvasWidth, canvasHeight):
         self.__canvas = Rectangle(0, 0, canvasWidth, canvasHeight)
-        self.__boundaries = Rectangle(self.__canvas.left, self.__canvas.bottom + _PADDLE_SPEED_BAR_HEIGHT,
+        self.__rectangle = Rectangle(self.__canvas.left, self.__canvas.bottom + _PADDLE_SPEED_BAR_HEIGHT,
             self.__canvas.right, self.__canvas.top - _INFORMATION_BAR_HEIGHT)
 
         self.__informationBarFont = None
@@ -71,8 +71,8 @@ class GameEngine:
         return gameObjects
 
     @property
-    def boundaries(self):
-        return self.__boundaries
+    def rectangle(self):
+        return self.__rectangle
 
     @property
     def state(self):
@@ -87,7 +87,7 @@ class GameEngine:
         self.__informationBarFont = Font(_INFORMATION_BAR_FONT_FILE, _INFORMATION_BAR_FONT_SIZE)
         self.__messageBoxFont = Font(_MESSAGE_BOX_FONT_FILE, _MESSAGE_BOX_FONT_SIZE)
 
-        self.__paddle.position = Vector((self.__boundaries.right/2.0, self.__boundaries.bottom + self.__paddle.height))
+        self.__paddle.position = Vector((self.__rectangle.right/2.0, self.__rectangle.bottom + self.__paddle.height))
 
         self.__loadLevel(self.__levelFactory.buildLevel(1))
         self.__playBackgroundMusic()
@@ -96,7 +96,7 @@ class GameEngine:
     def reset(self):
         self.__balls = []
         self.__blocks = []
-        self.__paddle.position.x = self.boundaries.right/2.0
+        self.__paddle.position.x = self.rectangle.right/2.0
         self.__totalPoints = 0
         self.__stopBackgroundMusic()
         self.initialize()

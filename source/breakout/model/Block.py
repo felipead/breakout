@@ -9,11 +9,29 @@ _HORIZONTAL_BORDER = 0.5
 
 class Block(AbstractGameObject):
 
-    def __init__(self, engine, position, blockColor, width, height):
+    def __init__(self, engine, blockColor, width, height, position=None):
         AbstractGameObject.__init__(self, engine, position)
         self._width = width
         self._height = height
         self._blockColor = blockColor
+        self._rectangle = None
+        self.__rebuildRectangle()
+
+    @property
+    def position(self):
+        return self._position
+
+    @position.setter
+    def position(self, value):
+        self._position = value
+        self.__rebuildRectangle()
+
+    def __rebuildRectangle(self):
+        left = self.position.x - self.width/2.0
+        right = self.position.x + self.width/2.0
+        top = self.position.y + self.height/2.0
+        bottom = self.position.y - self.height/2.0
+        self._rectangle = Rectangle(left, bottom, right, top)
 
     @property
     def width(self):
@@ -32,12 +50,8 @@ class Block(AbstractGameObject):
         return self._blockColor.value.points
 
     @property
-    def boundaries(self):
-        left = self.position.x - self.width/2.0
-        right = self.position.x + self.width/2.0
-        top = self.position.y + self.height/2.0
-        bottom = self.position.y - self.height/2.0
-        return Rectangle(left, bottom, right, top)
+    def rectangle(self):
+        return self._rectangle
 
     def update(self, milliseconds, tick):
         pass

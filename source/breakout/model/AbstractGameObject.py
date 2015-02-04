@@ -1,17 +1,28 @@
 from breakout.geometry.Vector import Vector
 
 
-class AbstractGameObject:
+class AbstractGameObject(object):
 
     def __init__(self, engine, position=None):
-        self.engine = engine
+        if engine is None:
+            raise Exception("engine can not be None")
+        self._engine = engine
+
         if position is None:
-            self.position = Vector((0,0))
+            self._position = Vector((0,0))
         else:
-            self.position = position
+            self._position = position
 
     @property
-    def boundaries(self):
+    def position(self):
+        return self._position
+
+    @position.setter
+    def position(self, value):
+        self._position = value
+
+    @property
+    def rectangle(self):
         raise NotImplementedError()
 
     def update(self, milliseconds, tick):

@@ -26,7 +26,7 @@ class Paddle(AbstractMovableGameObject):
         return self._height
 
     @property
-    def boundaries(self):
+    def rectangle(self):
         left = self.position.x - self._width/2.0
         right = self.position.x + self._width/2.0
         bottom = self.position.y - self._height/2.0
@@ -38,8 +38,8 @@ class Paddle(AbstractMovableGameObject):
         self.__checkBoundaries()
 
     def __checkBoundaries(self):
-        screenRectangle = self.engine.boundaries
-        thisRectangle = self.boundaries
+        screenRectangle = self._engine.rectangle
+        thisRectangle = self.rectangle
         if thisRectangle.left <= screenRectangle.left:
             self.position.x = screenRectangle.left + self._width / 2.0
             self.speed.x = 0

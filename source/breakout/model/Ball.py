@@ -36,8 +36,8 @@ class Ball(AbstractMovableGameObject):
 
     def __init__(self, engine, position=None, speed=None, color=_DEFAULT_COLOR, radius=_DEFAULT_RADIUS):
         AbstractMovableGameObject.__init__(self, engine, position, speed)
-        self.radius = radius
-        self.color = color
+        self._radius = radius
+        self._color = color
         self.__soundCollisionBallWithWall = Sound(_SOUND_FILE_COLLISION_BALL_WITH_WALL)
         self.__soundCollisionBallWithBall = Sound(_SOUND_FILE_COLLISION_BALL_WITH_BALL)
         self.__soundCollisionBallWithBlock = Sound(_SOUND_FILE_COLLISION_BALL_WITH_BLOCK)
@@ -45,11 +45,19 @@ class Ball(AbstractMovableGameObject):
         self.__soundBallDestroyed = Sound(_SOUND_FILE_BALL_DESTROYED)
 
     @property
-    def boundaries(self):
-        left = self.position.x - self.radius
-        right = self.position.x + self.radius
-        bottom = self.position.y - self.radius
-        top = self.position.y + self.radius
+    def radius(self):
+        return self._radius
+
+    @property
+    def color(self):
+        return self._color
+
+    @property
+    def rectangle(self):
+        left = self.position.x - self._radius
+        right = self.position.x + self._radius
+        bottom = self.position.y - self._radius
+        top = self.position.y + self._radius
         return Rectangle(left, bottom, right, top)
 
 
@@ -60,7 +68,7 @@ class Ball(AbstractMovableGameObject):
         brightness = float(tick % _COLOR_BRIGHTNESS_FREQUENCY) / _COLOR_BRIGHTNESS_FREQUENCY
         if brightness > 1:
             brightness = 1
-        baseColor = self.color.value
+        baseColor = self._color.value
 
         x = self.position.x
         y = self.position.y
@@ -68,13 +76,13 @@ class Ball(AbstractMovableGameObject):
         radiansOffset = (_CIRCLE_LENGTH / float(_POLYGON_EDGES)) * rotation
 
         outerCircleColor = tuple(i * (1 - brightness) for i in baseColor)
-        Drawing.drawCircle2d(x, y, self.radius, outerCircleColor, _POLYGON_EDGES, radiansOffset)
+        Drawing.drawCircle2d(x, y, self._radius, outerCircleColor, _POLYGON_EDGES, radiansOffset)
 
         middleCircleColor = tuple(i * brightness for i in baseColor)
-        Drawing.drawCircle2d(x, y, self.radius * 0.75, middleCircleColor, _POLYGON_EDGES, radiansOffset)
+        Drawing.drawCircle2d(x, y, self._radius * 0.75, middleCircleColor, _POLYGON_EDGES, radiansOffset)
 
         innerCircleColor = tuple(i * (1 - brightness) for i in baseColor)
-        Drawing.drawCircle2d(x, y, self.radius * 0.50, innerCircleColor, _POLYGON_EDGES, radiansOffset)
+        Drawing.drawCircle2d(x, y, self._radius * 0.50, innerCircleColor, _POLYGON_EDGES, radiansOffset)
 
 
     def update(self, milliseconds, tick):
@@ -86,11 +94,11 @@ class Ball(AbstractMovableGameObject):
 
 
     def __checkIfBallCrossedBottomBoundary(self):
-        screenRectangle = self.engine.boundaries
-        thisRectangle = self.boundaries
+        screenRectangle = self._engine.rectangle
+        thisRectangle = self.rectangle
         if thisRectangle.bottom < screenRectangle.bottom:
             self.__soundBallDestroyed.play()
-            self.engine.destroyBall(self)
+            self._engine.destroyBall(self)
 
 
     def __detectCollisions(self):
@@ -107,22 +115,22 @@ class Ball(AbstractMovableGameObject):
         return collisionType
 
     def __detectCollisionWithPaddle(self):
-        collision = self.__detectCollisionWithObject(self.engine.paddle)
+        collision = self.__detectCollisionWithObject(self._engine.paddle)
         if collision:
             self.speed.y = abs(self.speed.y)
             return _CollisionType.PADDLE
         return None
 
     def __detectCollisionWithBlock(self):
-        for block in self.engine.blocks:
+        for block in self._engine.blocks:
             if self.__detectCollisionWithObject(block):
-                self.engine.destroyBlock(block)
+                self._engine.destroyBlock(block)
                 return _CollisionType.BLOCK
 
         return None
 
     def __detectCollisionWithAnotherBall(self):
-        for ball in self.engine.balls:
+        for ball in self._engine.balls:
             if ball is not self:
                 if self.__detectCollisionWithObject(ball):
                     return  _CollisionType.BALL
@@ -130,8 +138,8 @@ class Ball(AbstractMovableGameObject):
         return None
 
     def __detectCollisionWithWallEdges(self):
-        screenRectangle = self.engine.boundaries
-        thisRectangle = self.boundaries
+        screenRectangle = self._engine.rectangle
+        thisRectangle = self.rectangle
 
         if thisRectangle.left <= screenRectangle.left:
             self.speed.x = abs(self.speed.x)
@@ -162,8 +170,8 @@ class Ball(AbstractMovableGameObject):
         if obj == self:
             return False
             
-        A = self.boundaries # A is this object rectangle
-        B = obj.boundaries # B is target object rectangle
+        A = self.rectangle # A is this object rectangle
+        B = obj.rectangle # B is target object rectangle
     
         verticalIntersection = False
         topIntersection = False
@@ -215,4 +223,4 @@ class Ball(AbstractMovableGameObject):
 
 
     def __str__(self):
-        return "Ball {Position: " + str(self.position) + ", Speed: " + str(self.speed) + ", Color: " + str(self.color) + ", Radius: " + str(self.radius) + "}"
+        return "Ball {Position: " + str(self.position) + ", Speed: " + str(self.speed) + ", Color: " + str(self._color) + ", Radius: " + str(self._radius) + "}"
