@@ -1,7 +1,6 @@
 from datetime import datetime
 from OpenGL.GL import *
 from OpenGL.GLUT import *
-import pygame
 from pygame.font import Font
 from pygame.constants import K_q, K_r, K_SPACE, K_p
 from breakout.util.Drawing import Drawing
@@ -156,8 +155,7 @@ class GameEngine:
         self.__drawPaddleSpeedBar()
         self.__drawInformationBar(framesPerSecond)
         self.__drawGameObjects(milliseconds, tick)
-        self.__drawMessageBox()
-
+        self.__drawMessageBox(self.__getStatusText())
 
     def __drawBackground(self, screen_height, screen_width):
         glEnable(GL_TEXTURE_2D)
@@ -193,9 +191,10 @@ class GameEngine:
         status = (" Level %d | FPS %d | Balls %d | Points %d " %
                   (self.__currentLevel.index, framesPerSecond, len(self.__balls), self.__totalPoints))
 
+        renderedStatus = self.__informationBarFont.render(status, True, _INFORMATION_BAR_FOREGROUND_COLOR, _INFORMATION_BAR_BACKGROUND_COLOR)
         x = self.__canvas.left
         y = self.__canvas.top - _INFORMATION_BAR_HEIGHT
-        Drawing.renderText2d(x, y, status, self.__informationBarFont, _INFORMATION_BAR_FOREGROUND_COLOR, _INFORMATION_BAR_BACKGROUND_COLOR)
+        Drawing.drawRenderedText(x, y, renderedStatus)
 
     def __drawPaddleSpeedBar(self):
         a = (self.__canvas.left, self.__canvas.bottom)
@@ -213,7 +212,7 @@ class GameEngine:
         d = (paddleSpeed * median / _PADDLE_MAX_SPEED + median, self.__canvas.bottom)
         Drawing.drawQuadrilateral2d(a, b, c, d, Color.OLIVE.value)
 
-    def __drawMessageBox(self):
+    def __getStatusText(self):
         if self.__state == GameState.PAUSE:
             text = "Pause"
         elif self.__state == GameState.LOST:
@@ -222,17 +221,15 @@ class GameEngine:
             text = "Congratulations"
         else:
             text = None
+        return text
 
+    def __drawMessageBox(self, text):
         if text is not None:
-            renderedText = self.__messageBoxFont.render(text, True,
-                                                        _MESSAGE_BOX_FOREGROUND_COLOR, _MESSAGE_BOX_BACKGROUND_COLOR)
-            renderedTextBytes = pygame.image.tostring(renderedText, "RGBA", 1)
+            renderedText = self.__messageBoxFont.render(text, True, _MESSAGE_BOX_FOREGROUND_COLOR, _MESSAGE_BOX_BACKGROUND_COLOR)
             size = renderedText.get_size()
             x = (self.__canvas.right - self.__canvas.left) / 2 - size[0] / 4
             y = (self.__canvas.top - self.__canvas.bottom) / 2 - size[1] / 4
-            glRasterPos2d(x, y)
-            glPixelZoom(1, 1)
-            glDrawPixels(size[0], size[1], GL_RGBA, GL_UNSIGNED_BYTE, renderedTextBytes)
+            Drawing.drawRenderedText(x, y, renderedText)
 
     def __printDebugInfo(self):
         now = datetime.now()

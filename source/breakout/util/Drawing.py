@@ -33,12 +33,10 @@ class Drawing:
         # Return the texture id, so we can use glBindTexture
         return textureId
 
-
     @staticmethod
-    def renderText2d(x, y, text, font, foregroundColor, backgroundColor):
+    def drawRenderedText(x, y, renderedText):
         glRasterPos2d(x, y)
         glPixelZoom(1, 1)
-        renderedText = font.render(text, True, foregroundColor, backgroundColor)
         renderedTextBytes = pygame.image.tostring(renderedText, "RGBA", 1)
         renderedTextSize = renderedText.get_size()
         glDrawPixels(renderedTextSize[0], renderedTextSize[1], GL_RGBA, GL_UNSIGNED_BYTE, renderedTextBytes)
