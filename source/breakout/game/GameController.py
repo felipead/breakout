@@ -51,7 +51,7 @@ class GameController:
             ticks += 1
 
             self.__engine.update(milliseconds, ticks)
-            self.__engine.display(milliseconds, ticks, self.__screenWidth, self.__screenHeight)
+            self.__engine.display(milliseconds, ticks, self.__screenWidth, self.__screenHeight, clock.get_fps())
 
             pygame.display.flip()  # swap buffers
 

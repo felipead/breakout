@@ -33,10 +33,30 @@ class Drawing:
         # Return the texture id, so we can use glBindTexture
         return textureId
 
+
     @staticmethod
-    def drawCircle2d(x, y, radius, color=None, numberOfEdges=6, radianOffset=0):
-        if color is not None:
-            glColor(*color)
+    def renderText2d(x, y, text, font, foregroundColor, backgroundColor):
+        glRasterPos2d(x, y)
+        glPixelZoom(1, 1)
+        renderedText = font.render(text, True, foregroundColor, backgroundColor)
+        renderedTextBytes = pygame.image.tostring(renderedText, "RGBA", 1)
+        renderedTextSize = renderedText.get_size()
+        glDrawPixels(renderedTextSize[0], renderedTextSize[1], GL_RGBA, GL_UNSIGNED_BYTE, renderedTextBytes)
+
+    @staticmethod
+    def drawLine2d(point1, point2, rgbColor):
+        if rgbColor is not None:
+            glColor(*rgbColor)
+
+        glBegin(GL_LINES)
+        glVertex(point1[0], point1[1])
+        glVertex(point2[0], point2[1])
+        glEnd()
+
+    @staticmethod
+    def drawCircle2d(x, y, radius, rgbColor=None, numberOfEdges=6, radianOffset=0):
+        if rgbColor is not None:
+            glColor(*rgbColor)
         if numberOfEdges < 3:
             raise Exception("number of edges must be greater or equal than 3")
 
@@ -60,7 +80,7 @@ class Drawing:
     @staticmethod
     def drawQuadrilateral2d(vertex1, vertex2, vertex3, vertex4, rgbColor=None):
         if rgbColor is not None:
-            glColor(rgbColor[0], rgbColor[1], rgbColor[2])
+            glColor(*rgbColor)
 
         glBegin(GL_POLYGON)
         glVertex(vertex1[0], vertex1[1])

@@ -4,7 +4,9 @@ from OpenGL.GLUT import *
 import pygame
 from pygame.font import Font
 from pygame.constants import K_q, K_r, K_SPACE, K_p
+from breakout.util.Drawing import Drawing
 
+from breakout.model.Color import Color
 from breakout.util.MouseButton import MouseButton
 from breakout.game.GameState import GameState
 from breakout.game.LevelFactory import LevelFactory
@@ -146,13 +148,13 @@ class GameEngine:
             self.__balls.remove(ball)
             del ball
 
-    def display(self, milliseconds, tick, screen_width, screen_height):
+    def display(self, milliseconds, tick, screen_width, screen_height, framesPerSecond):
         if self.__state is None:
             raise Exception("Invalid operation. Did you forget to call initialize() first?")
         glClear(GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT)   # clear the screen
         self.__drawBackground(screen_height, screen_width)
         self.__drawPaddleSpeedBar()
-        self.__drawInformationBar()
+        self.__drawInformationBar(framesPerSecond)
         self.__drawGameObjects(milliseconds, tick)
         self.__drawMessageBox()
 
@@ -181,49 +183,35 @@ class GameEngine:
         for gameObject in self.gameObjects:
                 gameObject.display(milliseconds, tick)
 
-    def __drawInformationBar(self):
-        # Draw the information bar, on the screen top edge
-        glColor(0, 0, 0)
-        glBegin(GL_POLYGON)
-        glVertex(self.__canvas.left, self.__canvas.top)
-        glVertex(self.__canvas.right, self.__canvas.top)
-        glVertex(self.__canvas.right, self.__canvas.top - _INFORMATION_BAR_HEIGHT)
-        glVertex(self.__canvas.left, self.__canvas.top - _INFORMATION_BAR_HEIGHT)
-        glEnd()
+    def __drawInformationBar(self, framesPerSecond):
+        a = (self.__canvas.left, self.__canvas.top)
+        b = (self.__canvas.right, self.__canvas.top)
+        c = (self.__canvas.right, self.__canvas.top - _INFORMATION_BAR_HEIGHT)
+        d = (self.__canvas.left, self.__canvas.top - _INFORMATION_BAR_HEIGHT)
+        Drawing.drawQuadrilateral2d(a, b, c, d, Color.BLACK.value)
 
-        # Fills the information bar with the game status
-        status = (" Level %d  |  Balls %d  |  Points %d " % (self.__currentLevel.index, len(self.__balls), self.__totalPoints))
+        status = (" Level %d | FPS %d | Balls %d | Points %d " %
+                  (self.__currentLevel.index, framesPerSecond, len(self.__balls), self.__totalPoints))
+
         x = self.__canvas.left
         y = self.__canvas.top - _INFORMATION_BAR_HEIGHT
-        glRasterPos2d(x, y)
-        glPixelZoom(1, 1)
-        renderedStatus = self.__informationBarFont.render(status, True,
-                                            _INFORMATION_BAR_FOREGROUND_COLOR, _INFORMATION_BAR_BACKGROUND_COLOR)
-        renderedStatusBytes = pygame.image.tostring(renderedStatus, "RGBA", 1)
-        renderedStatusSize = renderedStatus.get_size()
-        glDrawPixels(renderedStatusSize[0], renderedStatusSize[1], GL_RGBA, GL_UNSIGNED_BYTE, renderedStatusBytes)
+        Drawing.renderText2d(x, y, status, self.__informationBarFont, _INFORMATION_BAR_FOREGROUND_COLOR, _INFORMATION_BAR_BACKGROUND_COLOR)
 
     def __drawPaddleSpeedBar(self):
-        glColor(0, 0, 0)
-        glBegin(GL_POLYGON)
-        glVertex(self.__canvas.left, self.__canvas.bottom)
-        glVertex(self.__canvas.right, self.__canvas.bottom)
-        glVertex(self.__canvas.right, self.__canvas.bottom + _PADDLE_SPEED_BAR_HEIGHT)
-        glVertex(self.__canvas.left, self.__canvas.bottom + _PADDLE_SPEED_BAR_HEIGHT)
-        glEnd()
-        half = (self.__canvas.right - self.__canvas.left) / 2
+        a = (self.__canvas.left, self.__canvas.bottom)
+        b = (self.__canvas.right, self.__canvas.bottom)
+        c = (self.__canvas.right, self.__canvas.bottom + _PADDLE_SPEED_BAR_HEIGHT)
+        d = (self.__canvas.left, self.__canvas.bottom + _PADDLE_SPEED_BAR_HEIGHT)
+        Drawing.drawQuadrilateral2d(a, b, c, d, Color.BLACK.value)
+
+        median = (self.__canvas.right - self.__canvas.left) / 2
         paddleSpeed = self.__paddle.speed.x
-        glBegin(GL_POLYGON)
-        glColor(0.8, 0.8, 0)
-        glVertex(half, self.__canvas.bottom)
-        glVertex(half, self.__canvas.bottom + _PADDLE_SPEED_BAR_HEIGHT)
-        glVertex(paddleSpeed * half / _PADDLE_MAX_SPEED + half, self.__canvas.bottom + _PADDLE_SPEED_BAR_HEIGHT)
-        glVertex(paddleSpeed * half / _PADDLE_MAX_SPEED + half, self.__canvas.bottom)
-        glEnd()
-        glBegin(GL_LINES)
-        glVertex(self.__canvas.left, self.__canvas.bottom)
-        glVertex(self.__canvas.right, self.__canvas.bottom)
-        glEnd()
+
+        a = (median, self.__canvas.bottom)
+        b = (median, self.__canvas.bottom + _PADDLE_SPEED_BAR_HEIGHT)
+        c = (paddleSpeed * median / _PADDLE_MAX_SPEED + median, self.__canvas.bottom + _PADDLE_SPEED_BAR_HEIGHT)
+        d = (paddleSpeed * median / _PADDLE_MAX_SPEED + median, self.__canvas.bottom)
+        Drawing.drawQuadrilateral2d(a, b, c, d, Color.OLIVE.value)
 
     def __drawMessageBox(self):
         if self.__state == GameState.PAUSE:
