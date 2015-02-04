@@ -20,13 +20,13 @@ _INFORMATION_BAR_FONT_SIZE = 14
 _INFORMATION_BAR_FOREGROUND_COLOR = (255, 255, 255)
 _INFORMATION_BAR_BACKGROUND_COLOR = (0, 0, 0)
 
-_PADDLE_SPEED_BAR_HEIGHT = 3.0
-_PADDLE_MAX_SPEED = 0.75
-
 _MESSAGE_BOX_FONT_FILE = 'breakout/resources/fonts/pf_tempesta_five_extended.ttf'
 _MESSAGE_BOX_FONT_SIZE = 28
 _MESSAGE_BOX_FOREGROUND_COLOR = (255, 0, 0)
 _MESSAGE_BOX_BACKGROUND_COLOR = (0, 0, 0)
+
+_PADDLE_SPEED_BAR_HEIGHT = 3.0
+_PADDLE_MAX_SPEED = 0.75
 
 
 class GameEngine:
@@ -65,11 +65,12 @@ class GameEngine:
         return self.__canvas
 
     @property
-    def gameObjects(self):
-        gameObjects = [self.__paddle]
-        gameObjects.extend(self.__balls)
-        gameObjects.extend(self.__blocks)
-        return gameObjects
+    def objects(self):
+        objects = []
+        objects.extend(self.__balls)
+        objects.extend(self.__blocks)
+        objects.append(self.__paddle)
+        return objects
 
     @property
     def rectangle(self):
@@ -92,7 +93,7 @@ class GameEngine:
 
         self.__loadLevel(self.__levelFactory.buildLevel(1))
         self.__playBackgroundMusic()
-        self.__state = GameState.PLAY
+        self.__state = GameState.PAUSE
 
     def reset(self):
         self.__balls = []
@@ -133,7 +134,7 @@ class GameEngine:
 
     def __updateGameObjects(self, milliseconds, tick):
         if (self.__state == GameState.PLAY) or (self.__state == GameState.HALT_RUN_CYCLE):
-            for gameObject in self.gameObjects:
+            for gameObject in self.objects:
                 gameObject.update(milliseconds, tick)
 
     def destroyBlock(self, block):
@@ -178,7 +179,7 @@ class GameEngine:
         glDisable(GL_TEXTURE_2D)
 
     def __drawGameObjects(self, milliseconds, tick):
-        for gameObject in self.gameObjects:
+        for gameObject in self.objects:
                 gameObject.display(milliseconds, tick)
 
     def __drawInformationBar(self, framesPerSecond):
