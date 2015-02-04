@@ -26,12 +26,9 @@ class Block(AbstractGameObject):
         self._position = value
         self.__rebuildRectangle()
 
-    def __rebuildRectangle(self):
-        left = self.position.x - self.width/2.0
-        right = self.position.x + self.width/2.0
-        top = self.position.y + self.height/2.0
-        bottom = self.position.y - self.height/2.0
-        self._rectangle = Rectangle(left, bottom, right, top)
+    @property
+    def rectangle(self):
+        return self._rectangle
 
     @property
     def width(self):
@@ -49,9 +46,12 @@ class Block(AbstractGameObject):
     def points(self):
         return self._blockColor.value.points
 
-    @property
-    def rectangle(self):
-        return self._rectangle
+    def __rebuildRectangle(self):
+        left = self.position.x - self.width/2.0
+        right = self.position.x + self.width/2.0
+        top = self.position.y + self.height/2.0
+        bottom = self.position.y - self.height/2.0
+        self._rectangle = Rectangle(left, bottom, right, top)
 
     def update(self, milliseconds, tick):
         pass
@@ -70,13 +70,11 @@ class Block(AbstractGameObject):
         self.__drawInnerRectangle(x, y, dx, dy, colorTone)
 
     def __drawOuterRectangle(self, x, y, dx, dy, colorTone):
-        rgb = self.color.value
-        outerColor = (rgb[0] * (1 - colorTone), rgb[1] * (1 - colorTone), rgb[2] * (1 - colorTone))
+        outerColor = tuple(i * (1 - colorTone) for i in self.color.value)
         Drawing.drawRectangle2d(x, y, dx, dy, outerColor)
 
     def __drawInnerRectangle(self, x, y, dx, dy, colorTone):
-        rgb = self.color.value
-        innerColor = (rgb[0] * colorTone, rgb[1] * colorTone, rgb[2] * colorTone)
+        innerColor = tuple(i * colorTone for i in self.color.value)
         Drawing.drawRectangle2d(x, y, dx - _HORIZONTAL_BORDER, dy - _VERTICAL_BORDER, innerColor)
 
     def __str__(self):

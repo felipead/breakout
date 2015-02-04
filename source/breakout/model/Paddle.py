@@ -61,13 +61,11 @@ class Paddle(AbstractMovableGameObject):
         self.__drawInnerRectangle(colorTone, x, y, dx, dy)
 
     def __drawOuterRectangle(self, colorTone, x, y, dx, dy):
-        rgb = _OUTER_COLOR.value
-        outerColor = (rgb[0] * (1 - colorTone), rgb[1] * (1 - colorTone), rgb[2] * (1 - colorTone))
+        outerColor = tuple(i * (1-colorTone) for i in _OUTER_COLOR.value)
         Drawing.drawRectangle2d(x, y, dx, dy, outerColor)
 
     def __drawInnerRectangle(self, colorTone, x, y, dx, dy):
-        rgb = _INNER_COLOR.value
-        innerColor = (rgb[0] * colorTone, rgb[1] * colorTone, rgb[2] * colorTone)
+        innerColor = tuple(i * colorTone for i in _INNER_COLOR.value)
         Drawing.drawRectangle2d(x, y, dx - _HORIZONTAL_BORDER, dy - _VERTICAL_BORDER, innerColor)
 
     def __str__(self):
