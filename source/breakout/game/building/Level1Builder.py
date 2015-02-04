@@ -14,7 +14,6 @@ _BLOCK_ROWS = 30
 _BACKGROUND_MUSIC_FILE = 'breakout/resources/sounds/ChemicalBurn.wav'
 _BACKGROUND_TEXTURE_FILE = 'breakout/resources/graphics/Level1.png'
 
-_BALL_RADIUS = 3.0
 _BALL_SPEED = 0.075
 
 class Level1Builder(AbstractLevelBuilder):
@@ -50,16 +49,16 @@ class Level1Builder(AbstractLevelBuilder):
     def __buildBalls(self):
         boundaries = self._engine.boundaries
 
-        ball1 = Ball(self._engine,
-                     position=Vector((boundaries.width / 2, boundaries.top - _BALL_RADIUS)),
-                     speed=Vector((-_BALL_SPEED, _BALL_SPEED)), radius=_BALL_RADIUS)
+        ball1 = Ball(self._engine)
+        ball1.position = Vector((boundaries.width / 2, boundaries.top - ball1.radius))
+        ball1.speed = Vector((-_BALL_SPEED, _BALL_SPEED))
 
-        ball2 = Ball(self._engine,
-                     position=Vector((boundaries.right - _BALL_RADIUS, boundaries.top - _BALL_RADIUS)),
-                     speed=Vector((-_BALL_SPEED, -_BALL_SPEED)), radius=_BALL_RADIUS)
+        ball2 = Ball(self._engine)
+        ball2.position = Vector((boundaries.right - ball2.radius, boundaries.top - ball2.radius))
+        ball2.speed = Vector((-_BALL_SPEED, -_BALL_SPEED))
 
-        ball3 = Ball(self._engine,
-                     position=Vector((boundaries.left + _BALL_RADIUS, boundaries.top - _BALL_RADIUS)),
-                     speed=Vector((_BALL_SPEED, -_BALL_SPEED)), radius=_BALL_RADIUS)
+        ball3 = Ball(self._engine)
+        ball3.position = Vector((boundaries.left + ball3.radius, boundaries.top - ball3.radius))
+        ball3.speed = Vector((_BALL_SPEED, -_BALL_SPEED))
 
         return [ball1, ball2, ball3]

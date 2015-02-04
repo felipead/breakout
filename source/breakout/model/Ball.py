@@ -5,6 +5,7 @@ from pygame.mixer import Sound
 
 from breakout.model.AbstractMovableGameObject import AbstractMovableGameObject
 from breakout.geometry.Rectangle import Rectangle
+from breakout.model.Color import Color
 from breakout.util.Drawing import *
 
 
@@ -14,7 +15,14 @@ _SOUND_FILE_COLLISION_BALL_WITH_BLOCK = 'breakout/resources/sounds/Tuntz.wav'
 _SOUND_FILE_COLLISION_BALL_WITH_PADDLE = 'breakout/resources/sounds/Ping.wav'
 _SOUND_FILE_BALL_DESTROYED = 'breakout/resources/sounds/Basso.wav'
 
-_COLOR_TONE_FREQUENCY = 25
+_COLOR_BRIGHTNESS_FREQUENCY = 25
+
+_POLYGON_EDGES = 6
+_POLYGON_ROTATION_FREQUENCY = 20
+_CIRCLE_LENGTH = 2 * math.pi
+
+_DEFAULT_COLOR = Color.WHITE
+_DEFAULT_RADIUS = 4
 
 
 class _CollisionType(IntEnum):
@@ -26,9 +34,10 @@ class _CollisionType(IntEnum):
 
 class Ball(AbstractMovableGameObject):
 
-    def __init__(self, engine, position, speed, radius):
+    def __init__(self, engine, position=None, speed=None, color=_DEFAULT_COLOR, radius=_DEFAULT_RADIUS):
         AbstractMovableGameObject.__init__(self, engine, position, speed)
         self.radius = radius
+        self.color = color
         self.__soundCollisionBallWithWall = Sound(_SOUND_FILE_COLLISION_BALL_WITH_WALL)
         self.__soundCollisionBallWithBall = Sound(_SOUND_FILE_COLLISION_BALL_WITH_BALL)
         self.__soundCollisionBallWithBlock = Sound(_SOUND_FILE_COLLISION_BALL_WITH_BLOCK)
@@ -43,15 +52,30 @@ class Ball(AbstractMovableGameObject):
         top = self.position.y + self.radius
         return Rectangle(left, bottom, right, top)
 
+
     def display(self, milliseconds, tick):
-        colorTone = float(tick % _COLOR_TONE_FREQUENCY)/_COLOR_TONE_FREQUENCY
-        if colorTone > 1:
-            colorTone = 1
-        color = (colorTone, 1 - colorTone, 1 - colorTone)
+        self.__drawPolygons(tick)
+
+    def __drawPolygons(self, tick):
+        brightness = float(tick % _COLOR_BRIGHTNESS_FREQUENCY) / _COLOR_BRIGHTNESS_FREQUENCY
+        if brightness > 1:
+            brightness = 1
+        baseColor = self.color.value
 
         x = self.position.x
         y = self.position.y
-        Drawing.drawCircle2d(x, y, self.radius, color)
+        rotation = (tick % _POLYGON_ROTATION_FREQUENCY) / float(_POLYGON_ROTATION_FREQUENCY)
+        radiansOffset = (_CIRCLE_LENGTH / float(_POLYGON_EDGES)) * rotation
+
+        outerCircleColor = tuple(i * (1 - brightness) for i in baseColor)
+        Drawing.drawCircle2d(x, y, self.radius, outerCircleColor, _POLYGON_EDGES, radiansOffset)
+
+        middleCircleColor = tuple(i * brightness for i in baseColor)
+        Drawing.drawCircle2d(x, y, self.radius * 0.75, middleCircleColor, _POLYGON_EDGES, radiansOffset)
+
+        innerCircleColor = tuple(i * (1 - brightness) for i in baseColor)
+        Drawing.drawCircle2d(x, y, self.radius * 0.50, innerCircleColor, _POLYGON_EDGES, radiansOffset)
+
 
     def update(self, milliseconds, tick):
         self.position.x += self.speed.x * milliseconds
@@ -191,4 +215,4 @@ class Ball(AbstractMovableGameObject):
 
 
     def __str__(self):
-        return "Ball {Position: " + str(self.position) + ", Speed: " + str(self.speed) + "}"
+        return "Ball {Position: " + str(self.position) + ", Speed: " + str(self.speed) + ", Color: " + str(self.color) + ", Radius: " + str(self.radius) + "}"

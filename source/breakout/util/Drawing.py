@@ -2,6 +2,7 @@ from OpenGL.GL import *
 import math
 import pygame
 
+_CIRCLE_LENGTH = 2 * math.pi
 
 class Drawing:
 
@@ -33,17 +34,19 @@ class Drawing:
         return textureId
 
     @staticmethod
-    def drawCircle2d(x, y, radius, color=None, numberOfEdges=16):
+    def drawCircle2d(x, y, radius, color=None, numberOfEdges=6, radianOffset=0):
         if color is not None:
             glColor(*color)
+        if numberOfEdges < 3:
+            raise Exception("number of edges must be greater or equal than 3")
+
+        angleStep = _CIRCLE_LENGTH / float(numberOfEdges)
 
         glBegin(GL_POLYGON)
-
-        i = 0
-        while i < (2 * math.pi):
-            glVertex(x + (math.cos(i) * radius), y + (math.sin(i) * radius))
-            i += math.pi / float(numberOfEdges)
-
+        radians = 0
+        while radians < _CIRCLE_LENGTH:
+            glVertex(x + math.cos(radians + radianOffset) * radius, y + math.sin(radians + radianOffset) * radius)
+            radians += angleStep
         glEnd()
 
     @staticmethod
