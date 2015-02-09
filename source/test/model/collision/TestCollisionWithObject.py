@@ -99,14 +99,13 @@ class TestCollisionWithObject(object):
         collisionWithObject.hasRightIntersection = False
 
         collisionWithObject.apply(ball)
-
-
         assert abs(ball.speed.x) == abs(originalSpeed.x)
         assert abs(ball.speed.y) == abs(originalSpeed.y)
 
-    def test_does_not_apply_collision_if_it_did_not_happened(self, ball, originalSpeed):
+    def test_do_not_apply_collision_if_it_did_not_happened(self, ball, originalSpeed):
         collisionWithObject = CollisionWithObject()
 
+        assert collisionWithObject.happened == False
         collisionWithObject.apply(ball)
 
         assert ball.speed.x == originalSpeed.x
