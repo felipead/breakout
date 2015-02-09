@@ -3,6 +3,13 @@ python:
   - "2.6"
   - "2.7"
 
+before_install:
+  - brew update
+  - brew install Caskroom/cask/xquartz
+  - brew install libvorbis
+  - brew reinstall sdl_mixer
+  - brew install pygame
+
 install:
   - "pip install -r requirements.txt"
 
