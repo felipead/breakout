@@ -57,9 +57,6 @@ class Vector2d(object):
 
         return perpendicular
 
-    def __len__(self):
-        return 2
-
     def __abs__(self):
         return self.norm()
 
@@ -81,6 +78,7 @@ class Vector2d(object):
     def __iadd__(self, arg):
         self.x += arg
         self.y += arg
+        return self
 
     def __sub__(self, arg):
         return Vector2d(self.x - arg, self.y - arg)
@@ -88,6 +86,7 @@ class Vector2d(object):
     def __isub__(self, arg):
         self.x -= arg
         self.y -= arg
+        return self
 
     def __mul__(self, arg):
         return Vector2d(self.x * arg, self.y * arg)
@@ -95,6 +94,7 @@ class Vector2d(object):
     def __imul__(self, arg):
         self.x *= arg
         self.y *= arg
+        return self
 
     def __div__(self, arg):
         return Vector2d(self.x / arg, self.y / arg)
@@ -102,6 +102,7 @@ class Vector2d(object):
     def __idiv__(self, arg):
         self.x /= arg
         self.y /= arg
+        return self
 
     def __str__(self):
         return "Vector(" + self.x + ", " + self.y + ")"
