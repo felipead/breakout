@@ -1,7 +1,5 @@
 import random
 
-_RANDOM_CHOICE_RANGE = (-1, 1)
-
 
 class CollisionWithObject(object):
 
@@ -17,24 +15,30 @@ class CollisionWithObject(object):
     def happened(self):
         return self.hasHorizontalIntersection and self.hasVerticalIntersection
 
-    def apply(self, movableObject):
+    def apply(self, movingObject):
         if self.happened:
-            self.__applyHorizontalImpact(movableObject)
-            self.__applyVerticalImpact(movableObject)
+            self.__applyHorizontalImpact(movingObject)
+            self.__applyVerticalImpact(movingObject)
+            self.__applyInnerImpact(movingObject)
 
-            if not (self.hasLeftIntersection or self.hasRightIntersection or self.hasTopIntersection or self.hasBottomIntersection):
-                # Avoids dead-locks by choosing a random direction
-                movableObject.speed.x = abs(movableObject.speed.x) * random.choice(_RANDOM_CHOICE_RANGE)
-                movableObject.speed.y = abs(movableObject.speed.y) * random.choice(_RANDOM_CHOICE_RANGE)
-
-    def __applyHorizontalImpact(self, movableObject):
+    def __applyHorizontalImpact(self, movingObject):
         if self.hasLeftIntersection:
-            movableObject.speed.x = -abs(movableObject.speed.x)
+            movingObject.speed.x = -abs(movingObject.speed.x)
         elif self.hasRightIntersection:
-            movableObject.speed.x = abs(movableObject.speed.x)
+            movingObject.speed.x = abs(movingObject.speed.x)
 
-    def __applyVerticalImpact(self, movableObject):
+    def __applyVerticalImpact(self, movingObject):
         if self.hasTopIntersection:
-            movableObject.speed.y = abs(movableObject.speed.y)
+            movingObject.speed.y = abs(movingObject.speed.y)
         elif self.hasBottomIntersection:
-            movableObject.speed.y = -abs(movableObject.speed.y)
+            movingObject.speed.y = -abs(movingObject.speed.y)
+            
+    def __applyInnerImpact(self, movingObject):
+        if not (self.hasLeftIntersection or self.hasRightIntersection or self.hasTopIntersection or self.hasBottomIntersection):
+            # Avoids dead-locks by choosing a random direction
+            movingObject.speed.x = abs(movingObject.speed.x) * self.__chooseRandomDirection()
+            movingObject.speed.y = abs(movingObject.speed.y) * self.__chooseRandomDirection()
+
+    @staticmethod
+    def __chooseRandomDirection():
+        return random.choice((-1, 1))
