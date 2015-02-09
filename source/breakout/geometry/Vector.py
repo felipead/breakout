@@ -1,8 +1,8 @@
-
 import math
 
 class Vector(list):
 
+    # noinspection PyTypeChecker
     def __init__(self, arg=()):
         list.__init__(self, map(float, arg))
 

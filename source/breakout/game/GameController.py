@@ -15,7 +15,7 @@ _DEFAULT_SCREEN_WIDTH = 500
 _DEFAULT_SCREEN_HEIGHT = 600
 
 
-class GameController:
+class GameController(object):
 
     def __init__(self):
         self.__engine = GameEngine(_CANVAS_WIDTH, _CANVAS_HEIGHT)

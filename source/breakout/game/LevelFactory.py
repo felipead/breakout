@@ -1,7 +1,7 @@
 from breakout.game.building.Level1Builder import Level1Builder
 
 
-class LevelFactory:
+class LevelFactory(object):
 
     def __init__(self, engine):
         self._engine = engine

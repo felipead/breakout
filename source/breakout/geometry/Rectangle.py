@@ -1,5 +1,5 @@
 
-class Rectangle:
+class Rectangle(object):
 
     def __init__(self, left=0, bottom=0, right=0, top=0):
        self._left = left

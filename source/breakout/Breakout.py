@@ -1,7 +1,7 @@
 from breakout.game.GameController import GameController
 
 
-class Breakout:
+class Breakout(object):
 
     def __init__(self):
         self.controller = GameController()

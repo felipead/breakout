@@ -29,7 +29,7 @@ _PADDLE_SPEED_BAR_HEIGHT = 3.0
 _PADDLE_MAX_SPEED = 0.75
 
 
-class GameEngine:
+class GameEngine(object):
 
     def __init__(self, canvasWidth, canvasHeight):
         self.__canvas = Rectangle(0, 0, canvasWidth, canvasHeight)

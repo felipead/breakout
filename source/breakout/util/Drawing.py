@@ -4,7 +4,7 @@ import pygame
 
 _CIRCLE_LENGTH = 2 * math.pi
 
-class Drawing:
+class Drawing(object):
 
     @staticmethod
     def loadTexture(filename, use_alpha=False):
