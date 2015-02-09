@@ -11,7 +11,7 @@ from breakout.util.Drawing import Drawing
 _BLOCK_COLUMNS = 12
 _BLOCK_ROWS = 30
 
-_BACKGROUND_MUSIC_FILE = 'breakout/resources/sounds/ChemicalBurn.wav'
+_BACKGROUND_MUSIC_FILE = 'breakout/resources/music/ChemicalBurn.ogg'
 _BACKGROUND_TEXTURE_FILE = 'breakout/resources/graphics/Level1.png'
 
 _BALL_SPEED = 0.075
