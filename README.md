@@ -9,21 +9,20 @@ I've recorded a video of this game running. You can watch it [here](https://vime
 # Requirements
 
 - Python 2.7 or above (does not support Python 3.x)
-- Ubuntu or Mac OS X
+- Ubuntu Linux or Mac OS X (should work on any recent versions)
 - PyGame
 - PyOpenGL
-- PyTest (to run automated unit tests)
+- libvorbis (OGG support, installed by default on Ubuntu Linux)
 - Enum34 (Python 3.4 enum support backported to 2.7)
-- libvorbis (OGG support)
+- PyTest (to run automated unit tests)
 
 ## Ubuntu Linux Setup
 
-(Tested on Ubuntu 10.04 and 10.10)
+(Tested on Ubuntu 12.04)
 
      sudo apt-get install python-opengl
      sudo apt-get install python-pygame
-     sudo apt-get install python-setuptools
-     pip install enum34
+     pip install -r source/requirements.txt
      
 ## Mac OS X Setup
 
@@ -32,11 +31,9 @@ I've recorded a video of this game running. You can watch it [here](https://vime
 You need to have [Homebrew](http://brew.sh) and [Python 2.7](http://docs.python-guide.org/en/latest/starting/install/osx/) properly installed.
 
     brew install Caskroom/cask/xquartz
-    brew install libvorbis
-    brew reinstall sdl_mixer
+    brew install libvorbis && brew reinstall sdl_mixer
     brew install pygame
-    pip install pyopengl
-    pip install enum34
+    pip install -r source/requirements.txt
      
 # Running the Game
 
