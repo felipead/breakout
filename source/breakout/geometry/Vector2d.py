@@ -33,7 +33,7 @@ class Vector2d(object):
         """
         norm = self.norm()
         if norm != 0:
-            return Vector2d(self.x/norm, self.y/norm)
+            return self / norm
         else:
             return Vector2d()
 
