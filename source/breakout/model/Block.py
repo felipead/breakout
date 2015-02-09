@@ -2,6 +2,7 @@ from breakout.model.AbstractGameObject import AbstractGameObject
 from breakout.geometry.Rectangle import Rectangle
 from breakout.util.Drawing import Drawing
 
+_COLOR_BRIGHTNESS_FREQUENCY = 30
 
 _VERTICAL_BORDER = 0.5
 _HORIZONTAL_BORDER = 0.5
@@ -57,24 +58,24 @@ class Block(AbstractGameObject):
         pass
 
     def display(self, milliseconds, tick):
-        colorTone = (tick % 10)/float(10)
-        if colorTone > 1:
-            colorTone = 1
+        colorBrightness = (tick % _COLOR_BRIGHTNESS_FREQUENCY)/float(_COLOR_BRIGHTNESS_FREQUENCY)
+        if colorBrightness > 1:
+            colorBrightness = 1
 
         x = self.position.x
         y = self.position.y
         dy = self.height/2.0
         dx = self.width/2.0
 
-        self.__drawOuterRectangle(x, y, dx, dy, colorTone)
-        self.__drawInnerRectangle(x, y, dx, dy, colorTone)
+        self.__drawOuterRectangle(x, y, dx, dy, colorBrightness)
+        self.__drawInnerRectangle(x, y, dx, dy, colorBrightness)
 
-    def __drawOuterRectangle(self, x, y, dx, dy, colorTone):
-        outerColor = tuple(i * (1 - colorTone) for i in self.color.value)
+    def __drawOuterRectangle(self, x, y, dx, dy, colorBrightness):
+        outerColor = tuple(i * (1 - colorBrightness) for i in self.color.value)
         Drawing.drawRectangle2d(x, y, dx, dy, outerColor)
 
-    def __drawInnerRectangle(self, x, y, dx, dy, colorTone):
-        innerColor = tuple(i * colorTone for i in self.color.value)
+    def __drawInnerRectangle(self, x, y, dx, dy, colorBrightness):
+        innerColor = tuple(i * colorBrightness for i in self.color.value)
         Drawing.drawRectangle2d(x, y, dx - _HORIZONTAL_BORDER, dy - _VERTICAL_BORDER, innerColor)
 
     def __str__(self):

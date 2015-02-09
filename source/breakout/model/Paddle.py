@@ -8,7 +8,7 @@ _VERTICAL_BORDER = 0
 _HORIZONTAL_BORDER = 2
 _INNER_COLOR = Color.RED
 _OUTER_COLOR = Color.GRAY
-_COLOR_TONE_FREQUENCY = 25
+_COLOR_BRIGHTNESS_FREQUENCY = 30
 
 class Paddle(AbstractMovableGameObject):
 
@@ -48,24 +48,24 @@ class Paddle(AbstractMovableGameObject):
             self.speed.x = 0
 
     def display(self, milliseconds, tick):
-        colorTone = float(tick % _COLOR_TONE_FREQUENCY)/_COLOR_TONE_FREQUENCY
-        if colorTone > 1:
-            colorTone = 1
+        colorBrightness = float(tick % _COLOR_BRIGHTNESS_FREQUENCY)/_COLOR_BRIGHTNESS_FREQUENCY
+        if colorBrightness > 1:
+            colorBrightness = 1
 
         x = self.position.x
         y = self.position.y
         dy = float(self._height)/2
         dx = float(self._width)/2
 
-        self.__drawOuterRectangle(colorTone, x, y, dx, dy)
-        self.__drawInnerRectangle(colorTone, x, y, dx, dy)
+        self.__drawOuterRectangle(colorBrightness, x, y, dx, dy)
+        self.__drawInnerRectangle(colorBrightness, x, y, dx, dy)
 
-    def __drawOuterRectangle(self, colorTone, x, y, dx, dy):
-        outerColor = tuple(i * (1-colorTone) for i in _OUTER_COLOR.value)
+    def __drawOuterRectangle(self, colorBrightness, x, y, dx, dy):
+        outerColor = tuple(i * (1-colorBrightness) for i in _OUTER_COLOR.value)
         Drawing.drawRectangle2d(x, y, dx, dy, outerColor)
 
-    def __drawInnerRectangle(self, colorTone, x, y, dx, dy):
-        innerColor = tuple(i * colorTone for i in _INNER_COLOR.value)
+    def __drawInnerRectangle(self, colorBrightness, x, y, dx, dy):
+        innerColor = tuple(i * colorBrightness for i in _INNER_COLOR.value)
         Drawing.drawRectangle2d(x, y, dx - _HORIZONTAL_BORDER, dy - _VERTICAL_BORDER, innerColor)
 
     def __str__(self):
