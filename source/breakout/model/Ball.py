@@ -1,10 +1,10 @@
-import random
 from enum import IntEnum
 
 from pygame.mixer import Sound
 
 from breakout.model.AbstractMovableGameObject import AbstractMovableGameObject
 from breakout.geometry.Rectangle import Rectangle
+from breakout.model.CollisionDetector import CollisionDetector
 from breakout.model.Color import Color
 from breakout.util.Drawing import *
 
@@ -38,6 +38,7 @@ class Ball(AbstractMovableGameObject):
         AbstractMovableGameObject.__init__(self, engine, position, speed)
         self._radius = radius
         self._color = color
+        self._collisionDetector = CollisionDetector(self)
         self.__soundCollisionBallWithWall = Sound(_SOUND_FILE_COLLISION_BALL_WITH_WALL)
         self.__soundCollisionBallWithBall = Sound(_SOUND_FILE_COLLISION_BALL_WITH_BALL)
         self.__soundCollisionBallWithBlock = Sound(_SOUND_FILE_COLLISION_BALL_WITH_BLOCK)
@@ -115,15 +116,16 @@ class Ball(AbstractMovableGameObject):
         return collisionType
 
     def __detectCollisionWithPaddle(self):
-        collision = self.__detectCollisionWithObject(self._engine.paddle)
-        if collision:
+        collision = self.__detectCollisionWith(self._engine.paddle)
+        if collision.happened:
             self.speed.y = abs(self.speed.y)
             return _CollisionType.PADDLE
         return None
 
     def __detectCollisionWithBlock(self):
         for block in self._engine.blocks:
-            if self.__detectCollisionWithObject(block):
+            collision = self.__detectCollisionWith(block)
+            if collision.happened:
                 self._engine.destroyBlock(block)
                 return _CollisionType.BLOCK
 
@@ -132,7 +134,8 @@ class Ball(AbstractMovableGameObject):
     def __detectCollisionWithAnotherBall(self):
         for ball in self._engine.balls:
             if ball is not self:
-                if self.__detectCollisionWithObject(ball):
+                collision = self.__detectCollisionWith(ball)
+                if collision.happened:
                     return  _CollisionType.BALL
 
         return None
@@ -153,6 +156,12 @@ class Ball(AbstractMovableGameObject):
 
         return None
 
+    def __detectCollisionWith(self, anotherObject):
+        collision = self._collisionDetector.detectCollisionWith(anotherObject)
+        if collision.happened:
+            collision.apply(self)
+        return collision
+
     def __playCollisionSound(self, collisionType):
         if collisionType is not None:
             if collisionType == _CollisionType.WALL:
@@ -163,64 +172,6 @@ class Ball(AbstractMovableGameObject):
                 self.__soundCollisionBallWithPaddle.play()
             if collisionType == _CollisionType.BALL:
                 self.__soundCollisionBallWithBall.play()
-
-    def __detectCollisionWithObject(self, obj):
-        if obj is None:
-            return False
-        if obj == self:
-            return False
-            
-        A = self.rectangle # A is this object rectangle
-        B = obj.rectangle # B is target object rectangle
-    
-        verticalIntersection = False
-        topIntersection = False
-        bottomIntersection = False
-        
-        # Checks for vertical intersections
-        if A.top >= B.top and A.bottom >= B.bottom and A.bottom <= B.top:
-            verticalIntersection = True
-            topIntersection = True
-        elif A.top <= B.top and A.bottom >= B.bottom:
-            verticalIntersection = True
-        elif A.top <= B.top and A.bottom <= B.bottom and A.top >= B.bottom:
-            verticalIntersection = True
-            bottomIntersection = True
-            
-        horizontalIntersection = False
-        leftIntersection = False
-        rightIntersection = False
-            
-        # Checks for horizontal intersections
-        if A.left <= B.left and A.right <= B.right and B.left <= A.right:
-            horizontalIntersection = True
-            leftIntersection = True
-        elif A.left >= B.left and A.right <= B.right:
-            horizontalIntersection = True
-        elif A.left >= B.left and A.right >= B.right and A.left <= B.right:
-            horizontalIntersection = True
-            rightIntersection = True
-        
-        collision = (horizontalIntersection and verticalIntersection)
-        
-        if collision:
-            if leftIntersection:
-                self.speed.x = -abs(self.speed.x)
-            elif rightIntersection:
-                self.speed.x = abs(self.speed.x)
-                
-            if topIntersection:
-                self.speed.y = abs(self.speed.y)
-            elif bottomIntersection:
-                self.speed.y = -abs(self.speed.y)
-
-            if not (leftIntersection or rightIntersection or topIntersection or bottomIntersection):
-                # Avoids dead-locks by choosing a random direction
-                self.speed.x = abs(self.speed.x) * random.choice([-1, 1])
-                self.speed.y = abs(self.speed.y) * random.choice([-1, 1])
-            
-        return collision
-
 
     def __str__(self):
         return "Ball {Position: " + str(self.position) + ", Speed: " + str(self.speed) + ", Color: " + str(self._color) + ", Radius: " + str(self._radius) + "}"
