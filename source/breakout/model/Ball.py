@@ -9,11 +9,11 @@ from breakout.model.Color import Color
 from breakout.util.Drawing import *
 
 
-_SOUND_FILE_COLLISION_BALL_WITH_WALL = 'breakout/resources/sounds/Pop.wav'
+_SOUND_FILE_COLLISION_BALL_WITH_WALL = 'breakout/resources/sounds/Silence.wav'
 _SOUND_FILE_COLLISION_BALL_WITH_BALL = 'breakout/resources/sounds/Bottle.wav'
 _SOUND_FILE_COLLISION_BALL_WITH_BLOCK = 'breakout/resources/sounds/Tuntz.wav'
 _SOUND_FILE_COLLISION_BALL_WITH_PADDLE = 'breakout/resources/sounds/Ping.wav'
-_SOUND_FILE_BALL_DESTROYED = 'breakout/resources/sounds/Basso.wav'
+_SOUND_FILE_BALL_DESTROYED = 'breakout/resources/sounds/Hero.wav'
 
 _COLOR_BRIGHTNESS_FREQUENCY = 30
 
