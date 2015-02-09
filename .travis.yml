@@ -10,8 +10,8 @@ virtualenv:
 
 before_install:
   - sudo apt-get update
-  - sudo apt-get install python-opengl
   - sudo apt-get install python-pygame
+  # - sudo apt-get install python-opengl
 
 install:
   - pip install -r source/requirements.txt
