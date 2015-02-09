@@ -18,7 +18,7 @@ I've recorded a video of this game running. You can watch it [here](https://vime
 
 ## Ubuntu Linux Setup
 
-(Tested on Ubuntu 12.04)
+Tested on Ubuntu 12.04
 
      sudo apt-get install python-opengl
      sudo apt-get install python-pygame
@@ -26,7 +26,7 @@ I've recorded a video of this game running. You can watch it [here](https://vime
      
 ## Mac OS X Setup
 
-(Tested on Mac OS X 10.10 Yosemite)
+Tested on Mac OS X 10.10 Yosemite.
 
 You need to have [Homebrew](http://brew.sh) and [Python 2.7](http://docs.python-guide.org/en/latest/starting/install/osx/) properly installed.
 
@@ -41,11 +41,7 @@ Enter the 'source' directory and execute script 'run.sh'.
 
 # Running Automated Unit Tests
 
-Make sure you have pytest installed:
-
-    pip install pytest
-
-Then execute inside the 'source' folder:
+Execute inside the 'source' folder:
 
     py.test
 
