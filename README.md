@@ -18,17 +18,16 @@ I've recorded a video of this game running. You can watch it [here](https://vime
 
 ## Ubuntu Linux Setup
 
-Tested on Ubuntu 12.04
+Tested on Ubuntu 12.04:
 
-     sudo apt-get install python-opengl
      sudo apt-get install python-pygame
      pip install -r source/requirements.txt
      
 ## Mac OS X Setup
 
-Tested on Mac OS X 10.10 Yosemite.
-
 You need to have [Homebrew](http://brew.sh) and [Python 2.7](http://docs.python-guide.org/en/latest/starting/install/osx/) properly installed.
+
+Tested on Mac OS X 10.10 Yosemite:
 
     brew install Caskroom/cask/xquartz
     brew install libvorbis && brew reinstall sdl_mixer
