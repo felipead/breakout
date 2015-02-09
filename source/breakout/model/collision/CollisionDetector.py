@@ -1,5 +1,7 @@
 from breakout.model.AbstractMovableGameObject import AbstractMovableGameObject
+from breakout.model.collision.CollisionWithBoundaryEdge import CollisionWithBoundaryEdge
 from breakout.model.collision.CollisionWithObject import CollisionWithObject
+from breakout.model.collision.BoundaryEdgeType import BoundaryEdgeType
 
 
 class CollisionDetector(object):
@@ -23,6 +25,23 @@ class CollisionDetector(object):
         self.__detectHorizontalIntersection(collisionWithObject, self._movingObject.rectangle, otherObject.rectangle)
 
         return collisionWithObject
+
+    def detectCollisionWithBoundaryEdge(self, boundariesRectangle):
+        objectRectangle = self._movingObject.rectangle
+
+        collisionWithBoundaryEdge = CollisionWithBoundaryEdge()
+
+        if objectRectangle.left <= boundariesRectangle.left:
+            collisionWithBoundaryEdge.type = BoundaryEdgeType.LEFT
+        elif objectRectangle.right >= boundariesRectangle.right:
+            collisionWithBoundaryEdge.type = BoundaryEdgeType.RIGHT
+        elif objectRectangle.top >= boundariesRectangle.top:
+            collisionWithBoundaryEdge.type = BoundaryEdgeType.TOP
+        elif objectRectangle.bottom <= boundariesRectangle.bottom:
+            collisionWithBoundaryEdge.type = BoundaryEdgeType.BOTTOM
+
+        return collisionWithBoundaryEdge
+
 
     # noinspection PyChainedComparisons
     @staticmethod

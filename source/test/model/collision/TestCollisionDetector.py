@@ -1,10 +1,12 @@
 import pytest
 
 from breakout.geometry.Vector2d import Vector2d
+from breakout.geometry.Rectangle import Rectangle
 from breakout.model.Ball import Ball
 from breakout.game.GameEngine import GameEngine
 from breakout.model.Block import Block
 from breakout.model.BlockColor import BlockColor
+from breakout.model.collision.BoundaryEdgeType import BoundaryEdgeType
 from breakout.model.collision.CollisionDetector import CollisionDetector
 
 
@@ -27,6 +29,12 @@ def block(gameEngine):
 @pytest.fixture
 def collisionDetector(ball):
     return CollisionDetector(ball)
+
+# noinspection PyShadowingNames, PyUnresolvedReferences
+@pytest.fixture
+def boundariesRectangle():
+    return Rectangle(left=-10, bottom=-10, top=10, right=10)
+
 
 # noinspection PyShadowingNames, PyMethodMayBeStatic
 class TestCollisionDetector(object):
@@ -210,3 +218,44 @@ class TestCollisionDetector(object):
         assert collisionWithObject.hasBottomIntersection == False
         assert collisionWithObject.hasRightIntersection == False
         assert collisionWithObject.hasLeftIntersection == False
+
+    def test_top_collision_with_boundary_edge(self, collisionDetector, boundariesRectangle):
+        ball = collisionDetector.movingObject
+        ball.position.y = boundariesRectangle.top + ball.radius/2
+
+        collisionWithBoundaryEdge = collisionDetector.detectCollisionWithBoundaryEdge(boundariesRectangle)
+        assert collisionWithBoundaryEdge.happened == True
+        assert collisionWithBoundaryEdge.type == BoundaryEdgeType.TOP
+
+    def test_bottom_collision_with_boundary_edge(self, collisionDetector, boundariesRectangle):
+        ball = collisionDetector.movingObject
+        ball.position.y = boundariesRectangle.bottom - ball.radius/2
+
+        collisionWithBoundaryEdge = collisionDetector.detectCollisionWithBoundaryEdge(boundariesRectangle)
+        assert collisionWithBoundaryEdge.happened == True
+        assert collisionWithBoundaryEdge.type == BoundaryEdgeType.BOTTOM
+
+    def test_left_collision_with_boundary_edge(self, collisionDetector, boundariesRectangle):
+        ball = collisionDetector.movingObject
+        ball.position.x = boundariesRectangle.left - ball.radius/2
+
+        collisionWithBoundaryEdge = collisionDetector.detectCollisionWithBoundaryEdge(boundariesRectangle)
+        assert collisionWithBoundaryEdge.happened == True
+        assert collisionWithBoundaryEdge.type == BoundaryEdgeType.LEFT
+
+    def test_right_collision_with_boundary_edge(self, collisionDetector, boundariesRectangle):
+        ball = collisionDetector.movingObject
+        ball.position.x = boundariesRectangle.right + ball.radius/2
+
+        collisionWithBoundaryEdge = collisionDetector.detectCollisionWithBoundaryEdge(boundariesRectangle)
+        assert collisionWithBoundaryEdge.happened == True
+        assert collisionWithBoundaryEdge.type == BoundaryEdgeType.RIGHT
+
+    def test_no_collision_with_boundary_edge(self, collisionDetector, boundariesRectangle):
+        ball = collisionDetector.movingObject
+        ball.position.x = boundariesRectangle.left + boundariesRectangle.width/2
+        ball.position.y = boundariesRectangle.bottom + boundariesRectangle.height/2
+
+        collisionWithBoundaryEdge = collisionDetector.detectCollisionWithBoundaryEdge(boundariesRectangle)
+        assert collisionWithBoundaryEdge.happened == False
+        assert collisionWithBoundaryEdge.type == None
