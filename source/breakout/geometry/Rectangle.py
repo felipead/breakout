@@ -32,5 +32,15 @@ class Rectangle(object):
         return self._top - self._bottom
 
     def __str__(self):
-        return "(" + str(self.left) + "," + str(self.bottom) + "," + \
-               str(self.right) + "," + str(self.top) + ")"
+        return str((self.left, self.bottom, self.right, self.top))
+
+    def __eq__(self, other):
+        if other is None:
+            return False
+
+        if not isinstance(other, Rectangle):
+            return False
+
+        return self.left == other.left and self.right == other.right \
+               and self.top == other.top and self.bottom == other.bottom
+
