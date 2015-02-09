@@ -4,7 +4,7 @@
 
 I've recorded a video of this game running. You can watch it [here](https://vimeo.com/118087355). Scroll-down for screenshots.
 
-Travis-CI: [![Build Status](https://travis-ci.org/felipead/breakout-pygame.svg?branch=master)](https://travis-ci.org/felipead/breakout-pygame)
+[![Build Status](https://travis-ci.org/felipead/breakout-pygame.svg?branch=master)](https://travis-ci.org/felipead/breakout-pygame)
 
 # Requirements
 
