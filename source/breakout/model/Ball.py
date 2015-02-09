@@ -4,7 +4,7 @@ from enum import IntEnum, Enum
 
 from breakout.model.AbstractMovableGameObject import AbstractMovableGameObject
 from breakout.geometry.Rectangle import Rectangle
-from breakout.model.SoundPlayer import SoundPlayer
+from breakout.util.SoundPlayer import SoundPlayer
 from breakout.model.collision.BoundaryEdgeType import BoundaryEdgeType
 from breakout.model.collision.CollisionDetector import CollisionDetector
 from breakout.model.Color import Color
