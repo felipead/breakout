@@ -1,9 +1,10 @@
 # Breakout
+
 [Breakout](http://en.wikipedia.org/wiki/Breakout_%28video_game%29) game engine implemented in Python, [PyGame](http://pygame.org/) and OpenGL.
 
-I've recorded a video of this game running. You can watch it [here](https://vimeo.com/118087355).
+I've recorded a video of this game running. You can watch it [here](https://vimeo.com/118087355). Scroll-down for screenshots.
 
-Scroll-down for screenshots.
+Travis-CI: [![Build Status](https://travis-ci.org/felipead/breakout-pygame.svg?branch=master)](https://travis-ci.org/felipead/breakout-pygame)
 
 # Requirements
 
