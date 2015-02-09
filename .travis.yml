@@ -3,12 +3,19 @@ python:
   - "2.7"
 
 os:
-  - linux
+  # - linux
+  - osx
 
 before_install:
-  - sudo apt-get update
-  - sudo apt-get install python-opengl
-  - sudo apt-get install python-pygame
+  - brew update
+  - brew install Caskroom/cask/xquartz
+  - brew install libvorbis
+  - brew reinstall sdl_mixer
+  - brew install pygame
+
+  # - sudo apt-get update
+  # - sudo apt-get install python-opengl
+  # - sudo apt-get install python-pygame
 
 install:
   - pip install -r requirements.txt
