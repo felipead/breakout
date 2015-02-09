@@ -16,6 +16,20 @@ class Paddle(AbstractMovableGameObject):
         AbstractMovableGameObject.__init__(self, engine, position, speed)
         self._width = width
         self._height = _HEIGHT
+        self._rectangle = None
+        self.__rebuildRectangle()
+
+    @property
+    def position(self):
+        return self._position
+
+    @position.setter
+    def position(self, value):
+        self._position = value
+
+    @property
+    def rectangle(self):
+        return self._rectangle
 
     @property
     def width(self):
@@ -27,14 +41,11 @@ class Paddle(AbstractMovableGameObject):
 
     @property
     def rectangle(self):
-        left = self.position.x - self._width/2.0
-        right = self.position.x + self._width/2.0
-        bottom = self.position.y - self._height/2.0
-        top = self.position.y + self._height/2.0
-        return Rectangle(left, bottom, right, top)
+        return self._rectangle
 
     def update(self, milliseconds, tick):
         self.position.x += self.speed.x * milliseconds
+        self.__rebuildRectangle()
         self.__checkBoundaries()
 
     def __checkBoundaries(self):
@@ -67,6 +78,13 @@ class Paddle(AbstractMovableGameObject):
     def __drawInnerRectangle(self, colorBrightness, x, y, dx, dy):
         innerColor = tuple(i * colorBrightness for i in _INNER_COLOR.value)
         Drawing.drawRectangle2d(x, y, dx - _HORIZONTAL_BORDER, dy - _VERTICAL_BORDER, innerColor)
+
+    def __rebuildRectangle(self):
+        left = self.position.x - self.width/2.0
+        right = self.position.x + self.width/2.0
+        top = self.position.y + self.height/2.0
+        bottom = self.position.y - self.height/2.0
+        self._rectangle = Rectangle(left, bottom, right, top)
 
     def __str__(self):
         return "Paddle {Position: " + str(self.position) + ", Speed: " + str(self.speed) + "}"
