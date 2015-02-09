@@ -21,7 +21,7 @@ I've recorded a video of this game running. You can watch it [here](https://vime
 Tested on Ubuntu 12.04:
 
      sudo apt-get install python-pygame
-     pip install -r source/requirements.txt
+     pip install -r requirements.txt
      
 ## Mac OS X Setup
 
@@ -32,7 +32,7 @@ Tested on Mac OS X 10.10 Yosemite:
     brew install Caskroom/cask/xquartz
     brew install libvorbis && brew reinstall sdl_mixer
     brew install pygame
-    pip install -r source/requirements.txt
+    pip install -r requirements.txt
      
 # Running the Game
 
