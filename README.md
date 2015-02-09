@@ -3,6 +3,8 @@
 
 I've recorded a video of this game running. You can watch it [here](https://vimeo.com/118087355).
 
+Scroll-down for screenshots.
+
 # Requirements
 
 - Python 2.7 or above (does not support Python 3.x)
