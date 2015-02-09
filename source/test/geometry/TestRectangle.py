@@ -1,4 +1,3 @@
-
 from breakout.geometry.Rectangle import Rectangle
 
 

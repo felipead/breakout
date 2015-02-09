@@ -66,9 +66,9 @@ class Ball(AbstractMovableGameObject):
         self.__drawPolygons(tick)
 
     def __drawPolygons(self, tick):
-        brightness = float(tick % _COLOR_BRIGHTNESS_FREQUENCY) / _COLOR_BRIGHTNESS_FREQUENCY
-        if brightness > 1:
-            brightness = 1
+        colorBrightness = float(tick % _COLOR_BRIGHTNESS_FREQUENCY) / _COLOR_BRIGHTNESS_FREQUENCY
+        if colorBrightness > 1:
+            colorBrightness = 1
         baseColor = self._color.value
 
         x = self.position.x
@@ -76,13 +76,13 @@ class Ball(AbstractMovableGameObject):
         rotation = (tick % _POLYGON_ROTATION_FREQUENCY) / float(_POLYGON_ROTATION_FREQUENCY)
         radiansOffset = (_CIRCLE_LENGTH / float(_POLYGON_EDGES)) * rotation
 
-        outerCircleColor = tuple(i * (1 - brightness) for i in baseColor)
+        outerCircleColor = tuple(i * (1 - colorBrightness) for i in baseColor)
         Drawing.drawCircle2d(x, y, self._radius, outerCircleColor, _POLYGON_EDGES, radiansOffset)
 
-        middleCircleColor = tuple(i * brightness for i in baseColor)
+        middleCircleColor = tuple(i * colorBrightness for i in baseColor)
         Drawing.drawCircle2d(x, y, self._radius * 0.75, middleCircleColor, _POLYGON_EDGES, radiansOffset)
 
-        innerCircleColor = tuple(i * (1 - brightness) for i in baseColor)
+        innerCircleColor = tuple(i * (1 - colorBrightness) for i in baseColor)
         Drawing.drawCircle2d(x, y, self._radius * 0.50, innerCircleColor, _POLYGON_EDGES, radiansOffset)
 
 
