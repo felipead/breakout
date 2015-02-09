@@ -31,17 +31,17 @@ class TestRectangle(object):
         r = Rectangle(left = -10, bottom = -10, right = 10, top = 10)
         assert not (r == 5)
 
-    def test_not_equal_to_slightly_different_coordinates(self):
+    def test_not_equal_to_slightly_different_rectangle(self):
         r1 = Rectangle(left = -10, bottom = -10, right = 10.5, top = 10)
         r2 = Rectangle(left = -10, bottom = -10.1, right = 10, top = 10)
         assert not (r1 == r2)
 
-    def test_not_equal_to_very_different_coordinates(self):
+    def test_not_equal_to_very_different_rectangle(self):
         r1 = Rectangle(left = -10, bottom = -10, right = 10, top = 10)
         r2 = Rectangle(left = -50, bottom = -10, right = 50, top = 50)
         assert not (r1 == r2)
 
-    def test_equal_if_coordinates_are_equal(self):
+    def test_equal_if_rectangle_is_exactly_equal(self):
         r1 = Rectangle(left = -10, bottom = -10, right = 10, top = 10)
         r2 = Rectangle(left = -10, bottom = -10, right = 10, top = 10)
         assert r1 == r2
