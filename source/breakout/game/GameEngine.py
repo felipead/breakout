@@ -10,7 +10,7 @@ from breakout.util.MouseButton import MouseButton
 from breakout.game.GameState import GameState
 from breakout.game.LevelFactory import LevelFactory
 from breakout.model.Paddle import Paddle
-from breakout.geometry.Vector import Vector
+from breakout.geometry.Vector2d import Vector2d
 from breakout.geometry.Rectangle import Rectangle
 
 
@@ -89,7 +89,7 @@ class GameEngine(object):
         self.__informationBarFont = Font(_INFORMATION_BAR_FONT_FILE, _INFORMATION_BAR_FONT_SIZE)
         self.__messageBoxFont = Font(_MESSAGE_BOX_FONT_FILE, _MESSAGE_BOX_FONT_SIZE)
 
-        self.__paddle.position = Vector((self.__rectangle.right/2.0, self.__rectangle.bottom + self.__paddle.height))
+        self.__paddle.position = Vector2d(self.__rectangle.right/2.0, self.__rectangle.bottom + self.__paddle.height)
 
         self.__loadLevel(self.__levelFactory.buildLevel(1))
         self.__playBackgroundMusic()

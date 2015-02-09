@@ -1,5 +1,5 @@
 from breakout.model.AbstractGameObject import AbstractGameObject
-from breakout.geometry.Vector import Vector
+from breakout.geometry.Vector2d import Vector2d
 
 
 class AbstractMovableGameObject(AbstractGameObject):
@@ -7,7 +7,7 @@ class AbstractMovableGameObject(AbstractGameObject):
     def __init__(self, engine, position=None, speed=None):
         AbstractGameObject.__init__(self, engine, position)
         if speed is None:
-            self._speed = Vector((0,0))
+            self._speed = Vector2d(0,0)
         else:
             self._speed = speed
 

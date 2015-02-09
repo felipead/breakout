@@ -1,4 +1,4 @@
-from breakout.geometry.Vector import Vector
+from breakout.geometry.Vector2d import Vector2d
 
 
 class AbstractGameObject(object):
@@ -9,7 +9,7 @@ class AbstractGameObject(object):
         self._engine = engine
 
         if position is None:
-            self._position = Vector((0,0))
+            self._position = Vector2d(0,0)
         else:
             self._position = position
 

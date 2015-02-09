@@ -5,7 +5,7 @@ from breakout.game.building.AbstractLevelBuilder import AbstractLevelBuilder
 from breakout.model.Ball import Ball
 from breakout.model.Block import Block
 from breakout.model.Level import Level
-from breakout.geometry.Vector import Vector
+from breakout.geometry.Vector2d import Vector2d
 from breakout.util.Drawing import Drawing
 
 _BLOCK_COLUMNS = 12
@@ -41,7 +41,7 @@ class Level1Builder(AbstractLevelBuilder):
             blockColorIndex += 1
             for i in xrange(3, _BLOCK_COLUMNS - 2):
                 block = Block(self._engine, blockColor, width=blockWidth, height=blockHeight)
-                block.position = Vector((boundaries.left + i * blockWidth, boundaries.bottom + j * blockHeight))
+                block.position = Vector2d(boundaries.left + i * blockWidth, boundaries.bottom + j * blockHeight)
                 blocks.append(block)
 
         return blocks
@@ -50,15 +50,15 @@ class Level1Builder(AbstractLevelBuilder):
         boundaries = self._engine.rectangle
 
         ball1 = Ball(self._engine)
-        ball1.position = Vector((boundaries.width/2.0, boundaries.top - ball1.radius))
-        ball1.speed = Vector((-_BALL_SPEED, _BALL_SPEED))
+        ball1.position = Vector2d(boundaries.width/2.0, boundaries.top - ball1.radius)
+        ball1.speed = Vector2d(-_BALL_SPEED, _BALL_SPEED)
 
         ball2 = Ball(self._engine)
-        ball2.position = Vector((boundaries.right - ball2.radius, boundaries.top - ball2.radius))
-        ball2.speed = Vector((-_BALL_SPEED, -_BALL_SPEED))
+        ball2.position = Vector2d(boundaries.right - ball2.radius, boundaries.top - ball2.radius)
+        ball2.speed = Vector2d(-_BALL_SPEED, -_BALL_SPEED)
 
         ball3 = Ball(self._engine)
-        ball3.position = Vector((boundaries.left + ball3.radius, boundaries.top - ball3.radius))
-        ball3.speed = Vector((_BALL_SPEED, -_BALL_SPEED))
+        ball3.position = Vector2d(boundaries.left + ball3.radius, boundaries.top - ball3.radius)
+        ball3.speed = Vector2d(_BALL_SPEED, -_BALL_SPEED)
 
         return [ball1, ball2, ball3]
