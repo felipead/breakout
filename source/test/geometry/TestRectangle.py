@@ -2,7 +2,7 @@ from breakout.geometry.Rectangle import Rectangle
 
 
 # noinspection PyMethodMayBeStatic
-class TestRectangle:
+class TestRectangle(object):
 
     def test_get_coordinates(self):
         left, bottom, right, top = -10, -10, 10, 10
@@ -21,7 +21,7 @@ class TestRectangle:
         assert rectangle.height == 40
 
     def test_to_string(self):
-        assert str(Rectangle(-10, -10, 10, 10)) == "(-10, -10, 10, 10)"
+        assert str(Rectangle(-10, -10, 10, 10)) == "Rectangle {Left: -10.0, Bottom: -10.0, Right: 10.0, Top: 10.0}"
 
     def test_not_equal_to_none(self):
         r = Rectangle(left = -10, bottom = -10, right = 10, top = 10)

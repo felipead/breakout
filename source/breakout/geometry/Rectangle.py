@@ -1,11 +1,11 @@
 
 class Rectangle(object):
 
-    def __init__(self, left=0, bottom=0, right=0, top=0):
-       self._left = left
-       self._bottom = bottom
-       self._right = right
-       self._top = top
+    def __init__(self, left=0.0, bottom=0.0, right=0.0, top=0.0):
+       self._left = float(left)
+       self._bottom = float(bottom)
+       self._right = float(right)
+       self._top = float(top)
 
     @property
     def left(self):
@@ -32,7 +32,8 @@ class Rectangle(object):
         return self._top - self._bottom
 
     def __str__(self):
-        return str((self.left, self.bottom, self.right, self.top))
+        return "Rectangle {Left: " + str(self.left) + ", Bottom: " + str(self.bottom) + \
+               ", Right: " + str(self.right) + ", Top: " + str(self.top) + "}"
 
     def __eq__(self, other):
         if other is None:

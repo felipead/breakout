@@ -3,9 +3,13 @@ import math
 
 class Vector2d(object):
 
-    def __init__(self, x=0.0, y=0.0):
-        self._x = float(x)
-        self._y = float(y)
+    def __init__(self, x=0.0, y=0.0, copyFrom=None):
+        if copyFrom == None:
+            self._x = float(x)
+            self._y = float(y)
+        else:
+            self._x = float(copyFrom[0])
+            self._y = float(copyFrom[1])
 
     @property
     def x(self):
@@ -42,6 +46,13 @@ class Vector2d(object):
 
     def dotProduct(self, anotherVector):
         return self.x * anotherVector.x + self.y * anotherVector.y
+
+    def __getitem__(self, index):
+        if index == 0:
+            return self.x
+        if index == 1:
+            return self.y
+        raise IndexError()
 
     def __abs__(self):
         return self.norm()

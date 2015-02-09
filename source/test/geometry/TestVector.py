@@ -4,14 +4,13 @@ from breakout.geometry.Vector2d import Vector2d
 
 
 # noinspection PyMethodMayBeStatic
-class TestVector:
+class TestVector(object):
 
     def test_get_coordinates(self):
         x, y = 1, 2
         v = Vector2d(x, y)
-        coordinates = v.coordinates
-        assert v.x == x == coordinates[0]
-        assert v.y == y == coordinates[1]
+        assert v.x == x == v[0] == v.coordinates[0]
+        assert v.y == y == v[1] == v.coordinates[1]
 
     def test_set_coordinates(self):
         v = Vector2d(1, 2)

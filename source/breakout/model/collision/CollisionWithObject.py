@@ -3,38 +3,38 @@ import random
 _RANDOM_CHOICE_RANGE = (-1, 1)
 
 
-class Collision(object):
+class CollisionWithObject(object):
 
     def __init__(self):
-        self.leftIntersection = False
-        self.rightIntersection = False
-        self.topIntersection = False
-        self.bottomIntersection = False
-        self.horizontalIntersection = False
-        self.verticalIntersection = False
+        self.hasLeftIntersection = False
+        self.hasRightIntersection = False
+        self.hasTopIntersection = False
+        self.hasBottomIntersection = False
+        self.hasHorizontalIntersection = False
+        self.hasVerticalIntersection = False
 
     @property
     def happened(self):
-        return self.horizontalIntersection and self.verticalIntersection
+        return self.hasHorizontalIntersection and self.hasVerticalIntersection
 
     def apply(self, movableObject):
         if self.happened:
             self.__applyHorizontalImpact(movableObject)
             self.__applyVerticalImpact(movableObject)
 
-            if not (self.leftIntersection or self.rightIntersection or self.topIntersection or self.bottomIntersection):
+            if not (self.hasLeftIntersection or self.hasRightIntersection or self.hasTopIntersection or self.hasBottomIntersection):
                 # Avoids dead-locks by choosing a random direction
                 movableObject.speed.x = abs(movableObject.speed.x) * random.choice(_RANDOM_CHOICE_RANGE)
                 movableObject.speed.y = abs(movableObject.speed.y) * random.choice(_RANDOM_CHOICE_RANGE)
 
     def __applyHorizontalImpact(self, movableObject):
-        if self.leftIntersection:
+        if self.hasLeftIntersection:
             movableObject.speed.x = -abs(movableObject.speed.x)
-        elif self.rightIntersection:
+        elif self.hasRightIntersection:
             movableObject.speed.x = abs(movableObject.speed.x)
 
     def __applyVerticalImpact(self, movableObject):
-        if self.topIntersection:
+        if self.hasTopIntersection:
             movableObject.speed.y = abs(movableObject.speed.y)
-        elif self.bottomIntersection:
+        elif self.hasBottomIntersection:
             movableObject.speed.y = -abs(movableObject.speed.y)

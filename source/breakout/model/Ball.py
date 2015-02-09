@@ -1,29 +1,30 @@
-from enum import IntEnum
+import math
 
-from pygame.mixer import Sound
+from enum import IntEnum, Enum
 
 from breakout.model.AbstractMovableGameObject import AbstractMovableGameObject
 from breakout.geometry.Rectangle import Rectangle
-from breakout.model.CollisionDetector import CollisionDetector
+from breakout.model.SoundPlayer import SoundPlayer
+from breakout.model.collision.CollisionDetector import CollisionDetector
 from breakout.model.Color import Color
-from breakout.util.Drawing import *
+from breakout.util.Drawing import Drawing
 
-
-_SOUND_FILE_COLLISION_BALL_WITH_WALL = 'breakout/resources/sounds/Silence.wav'
-_SOUND_FILE_COLLISION_BALL_WITH_BALL = 'breakout/resources/sounds/Bottle.wav'
-_SOUND_FILE_COLLISION_BALL_WITH_BLOCK = 'breakout/resources/sounds/Tuntz.wav'
-_SOUND_FILE_COLLISION_BALL_WITH_PADDLE = 'breakout/resources/sounds/Ping.wav'
-_SOUND_FILE_BALL_DESTROYED = 'breakout/resources/sounds/Hero.wav'
-
-_COLOR_BRIGHTNESS_FREQUENCY = 30
 
 _POLYGON_EDGES = 6
 _POLYGON_ROTATION_FREQUENCY = 15
 _CIRCLE_LENGTH = 2 * math.pi
 
+_COLOR_BRIGHTNESS_FREQUENCY = 30
 _DEFAULT_COLOR = Color.WHITE
 _DEFAULT_RADIUS = 4
 
+
+class _SoundFile(Enum):
+    COLLISION_WITH_WALL = 'breakout/resources/sounds/Silence.wav'
+    COLLISION_WITH_BALL = 'breakout/resources/sounds/Bottle.wav'
+    COLLISION_WITH_BLOCK = 'breakout/resources/sounds/Tuntz.wav'
+    COLLISION_WITH_PADDLE = 'breakout/resources/sounds/Ping.wav'
+    BALL_DESTROYED = 'breakout/resources/sounds/Hero.wav'
 
 class _CollisionType(IntEnum):
     WALL = 1
@@ -39,11 +40,7 @@ class Ball(AbstractMovableGameObject):
         self._radius = radius
         self._color = color
         self._collisionDetector = CollisionDetector(self)
-        self.__soundCollisionBallWithWall = Sound(_SOUND_FILE_COLLISION_BALL_WITH_WALL)
-        self.__soundCollisionBallWithBall = Sound(_SOUND_FILE_COLLISION_BALL_WITH_BALL)
-        self.__soundCollisionBallWithBlock = Sound(_SOUND_FILE_COLLISION_BALL_WITH_BLOCK)
-        self.__soundCollisionBallWithPaddle = Sound(_SOUND_FILE_COLLISION_BALL_WITH_PADDLE)
-        self.__soundBallDestroyed = Sound(_SOUND_FILE_BALL_DESTROYED)
+        self._soundPlayer = SoundPlayer()
 
     @property
     def radius(self):
@@ -98,8 +95,8 @@ class Ball(AbstractMovableGameObject):
         screenRectangle = self._engine.rectangle
         thisRectangle = self.rectangle
         if thisRectangle.bottom < screenRectangle.bottom:
-            self.__soundBallDestroyed.play()
             self._engine.destroyBall(self)
+            self._soundPlayer.play(_SoundFile.BALL_DESTROYED.value)
 
 
     def __detectCollisions(self):
@@ -157,7 +154,7 @@ class Ball(AbstractMovableGameObject):
         return None
 
     def __detectCollisionWith(self, anotherObject):
-        collision = self._collisionDetector.detectCollisionWith(anotherObject)
+        collision = self._collisionDetector.detectCollisionWithObject(anotherObject)
         if collision.happened:
             collision.apply(self)
         return collision
@@ -165,13 +162,13 @@ class Ball(AbstractMovableGameObject):
     def __playCollisionSound(self, collisionType):
         if collisionType is not None:
             if collisionType == _CollisionType.WALL:
-                self.__soundCollisionBallWithWall.play()
+                self._soundPlayer.play(_SoundFile.COLLISION_WITH_WALL.value)
             if collisionType == _CollisionType.BLOCK:
-                self.__soundCollisionBallWithBlock.play()
+                self._soundPlayer.play(_SoundFile.COLLISION_WITH_BLOCK.value)
             if collisionType == _CollisionType.PADDLE:
-                self.__soundCollisionBallWithPaddle.play()
+                self._soundPlayer.play(_SoundFile.COLLISION_WITH_PADDLE.value)
             if collisionType == _CollisionType.BALL:
-                self.__soundCollisionBallWithBall.play()
+                self._soundPlayer.play(_SoundFile.COLLISION_WITH_BALL.value)
 
     def __str__(self):
         return "Ball {Position: " + str(self.position) + ", Speed: " + str(self.speed) + ", Color: " + str(self._color) + ", Radius: " + str(self._radius) + "}"
