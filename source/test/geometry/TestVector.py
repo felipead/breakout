@@ -9,8 +9,9 @@ class TestVector:
     def test_get_coordinates(self):
         x, y = 1, 2
         v = Vector2d(x, y)
-        assert v.x == x
-        assert v.y == y
+        coordinates = v.coordinates
+        assert v.x == x == coordinates[0]
+        assert v.y == y == coordinates[1]
 
     def test_set_coordinates(self):
         v = Vector2d(1, 2)
@@ -129,3 +130,11 @@ class TestVector:
         v2 = Vector2d(100,0)
         assert v1.dotProduct(v2) == 0
         assert v2.dotProduct(v1) == 0
+
+    def test_projection(self):
+        v1 = Vector2d(0,50)
+        v2 = Vector2d(1,23)
+
+    def test_to_string(self):
+        v = Vector2d(1.5,50.3)
+        assert str(v) == "(1.5, 50.3)"

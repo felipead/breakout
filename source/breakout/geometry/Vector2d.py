@@ -23,6 +23,10 @@ class Vector2d(object):
     def y(self, y):
         self._y = float(y)
 
+    @property
+    def coordinates(self):
+        return self.x, self.y
+
     def versor(self):
         """
         The versor of this vector, i.e., the directional unitary vector.
@@ -38,24 +42,6 @@ class Vector2d(object):
 
     def dotProduct(self, anotherVector):
         return self.x * anotherVector.x + self.y * anotherVector.y
-
-    def projection(self, anotherVector):
-        return self * (self.dotProduct(anotherVector) / (self.norm() ** 2))
-
-    def perpendicular(self):
-        perpendicular = Vector2d()
-        if self.x == 0:
-            if self.y == 0:
-                return Vector2d()
-            perpendicular.x = 1
-            perpendicular.y = -self.x / self.y
-        else:
-            perpendicular.y = 1
-            perpendicular.x = -self.y / self.x
-
-        perpendicular /= perpendicular.norm()
-
-        return perpendicular
 
     def __abs__(self):
         return self.norm()
@@ -105,4 +91,4 @@ class Vector2d(object):
         return self
 
     def __str__(self):
-        return "Vector(" + self.x + ", " + self.y + ")"
+        return str((self.x, self.y))
