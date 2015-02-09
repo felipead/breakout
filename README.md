@@ -37,7 +37,9 @@ You need to have [Homebrew](http://brew.sh) and [Python 2.7](http://docs.python-
      
 # Running the Game
 
-Enter the 'source' directory and execute script 'run.sh'.
+Enter the 'source' directory and execute script:
+
+     ./run.sh
 
 # Running Automated Unit Tests
 
