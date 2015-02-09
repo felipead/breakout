@@ -13,6 +13,7 @@ Scroll-down for screenshots.
 - PyOpenGL
 - PyTest (to run automated unit tests)
 - Enum34 (Python 3.4 enum support backported to 2.7)
+- libvorbis (OGG support)
 
 ## Ubuntu Linux Setup
 
@@ -30,6 +31,8 @@ Scroll-down for screenshots.
 You need to have [Homebrew](http://brew.sh) and [Python 2.7](http://docs.python-guide.org/en/latest/starting/install/osx/) properly installed.
 
     brew install Caskroom/cask/xquartz
+    brew install libvorbis
+    brew reinstall sdl_mixer
     brew install pygame
     pip install pyopengl
     pip install enum34
