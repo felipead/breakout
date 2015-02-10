@@ -46,6 +46,8 @@ Execute inside the 'source' folder:
 
     py.test
 
+You can also check the execution of the test suit on [Travis CI](https://travis-ci.org/felipead/breakout-pygame)
+
 # Screenshots
 
 ![Screenshot 01](screenshots/01.png)
