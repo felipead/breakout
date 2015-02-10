@@ -4,7 +4,7 @@ from breakout.geometry.Vector2d import Vector2d
 
 
 # noinspection PyMethodMayBeStatic
-class TestVector(object):
+class TestVector2d(object):
 
     def test_get_coordinates(self):
         x, y = 1, 2
