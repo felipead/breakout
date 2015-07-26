@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/felipead/breakout.svg?branch=master)](https://travis-ci.org/felipead/breakout)
 
-[Breakout](http://en.wikipedia.org/wiki/Breakout_%28video_game%29) game engine implemented in Python, [PyGame](http://pygame.org/) and OpenGL.
+[Breakout](http://en.wikipedia.org/wiki/Breakout_%28video_game%29) game engine implemented in Python, OpenGL and [PyGame](http://pygame.org/).
 
 I've recorded a video of this game running. You can watch it [here](https://vimeo.com/118087355). Scroll-down for screenshots.
 
