@@ -6,6 +6,8 @@ I've recorded a video of this game running. You can watch it [here](https://vime
 
 # Requirements
 
+As of 2016:
+
 - Python 2.7 or above (does not support Python 3.x)
 - Ubuntu Linux or Mac OS X (should work on any recent versions)
 - PyGame
